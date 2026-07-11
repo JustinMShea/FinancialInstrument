@@ -38,11 +38,12 @@ cc.Exp.1 (continuous contract rolled 1 day before Expiration)
 
 Synthetics and spreads:
 
-SPY.DIA --> type == synthetic;
+SPY.DIA --> type == synthetic; 
 
 U1.Z1 or U11.Z11 --> type == "calendar", "spread"; month == 'SEP', year == 2011
 
 U1.0302 --> type == "ICS", "spread"; month == 'SEP', year == 2011
+
 
 110917C125.110917P125 --> type == option_spread, spread
 }

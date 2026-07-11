@@ -4,8 +4,15 @@
 \alias{load.instruments}
 \title{load instrument metadata into the .instrument environment}
 \usage{
-load.instruments(file = NULL, ..., metadata = NULL, id_col = 1,
-  default_type = "stock", identifier_cols = NULL, overwrite = TRUE)
+load.instruments(
+  file = NULL,
+  ...,
+  metadata = NULL,
+  id_col = 1,
+  default_type = "stock",
+  identifier_cols = NULL,
+  overwrite = TRUE
+)
 }
 \arguments{
 \item{file}{string identifying file to load, default NULL, see Details}
@@ -40,7 +47,7 @@ Use the \code{identifier_cols} argument to specify which fields (if any) in the 
 
 Typically, columns will exist for \code{multiplier} and \code{tick_size}.
 
-Any other columns necessary to define the specified instrument type will also be required to avoid fatal Errors.
+Any other columns necessary to define the specified instrument type will also be required to avoid fatal Errors.  
 
 Additional columns will be processed, either as additional identifiers for recognized identifier names, or as custom fields.  See \code{\link{instrument}} for more information on custom fields.
 }

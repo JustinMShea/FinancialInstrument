@@ -3,14 +3,21 @@
 \name{ls_expiries}
 \alias{ls_expiries}
 \alias{ls_expires}
-\alias{ls_expires}
 \title{show unique expiration dates of instruments}
 \usage{
-ls_expiries(pattern = NULL, match = TRUE, underlying_id = NULL,
-  type = "derivative")
+ls_expiries(
+  pattern = NULL,
+  match = TRUE,
+  underlying_id = NULL,
+  type = "derivative"
+)
 
-ls_expires(pattern = NULL, match = TRUE, underlying_id = NULL,
-  type = "derivative")
+ls_expires(
+  pattern = NULL,
+  match = TRUE,
+  underlying_id = NULL,
+  type = "derivative"
+)
 }
 \arguments{
 \item{pattern}{optional regular expression.}

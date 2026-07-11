@@ -5,11 +5,9 @@
 \alias{prev.future_id}
 \title{Get the primary_id of the next-to-expire (previously expiring) future_series instrument}
 \usage{
-next.future_id(id, month_cycle = seq(3, 12, 3), root = NULL,
-  format = NULL)
+next.future_id(id, month_cycle = seq(3, 12, 3), root = NULL, format = NULL)
 
-prev.future_id(id, month_cycle = seq(3, 12, 3), root = NULL,
-  format = NULL)
+prev.future_id(id, month_cycle = seq(3, 12, 3), root = NULL, format = NULL)
 }
 \arguments{
 \item{id}{character string primary_id of a future_series instrument}
@@ -36,7 +34,7 @@ by passing it through \code{\link{month_cycle2numeric}}
 
 \code{root} is primarily used when you have an id that does not have an underscore, in which case, providing \code{root}
 will make splitting the id into primary_id and suffix_id easier and more accurate.  \code{root} can also be used if you want
-the returned id to be on a different \code{future} than the id you passed in (when used this way, \code{format} should also be used).
+the returned id to be on a different \code{future} than the id you passed in (when used this way, \code{format} should also be used). 
 
 By default, (when called with \code{format=NULL}) the returned id will be of the same format as the \code{id} that was passed in.  
 The format of the returned id can be specified with the \code{format} argument.  See \code{\link{format_id}} for supported values of \code{format}

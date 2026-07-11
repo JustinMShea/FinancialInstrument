@@ -3,7 +3,6 @@
 \name{saveInstruments}
 \alias{saveInstruments}
 \alias{loadInstruments}
-\alias{loadInstruments}
 \alias{reloadInstruments}
 \title{Save and Load all instrument definitions}
 \usage{

@@ -16,7 +16,7 @@ financial research.  Still in active development.
 The FinancialInstrument package provides a construct for defining and storing 
 meta-data for tradable contracts (referred to as instruments, e.g., stocks, 
 futures, options, etc.).  It can be used to create any asset class and 
-derivatives, across multiple currencies.
+derivatives, across multiple currencies.  
 
 FinancialInstrument was originally part of a companion package, blotter, that 
 provides portfolio accounting functionality.  Blotter accumulates 
@@ -42,7 +42,7 @@ denominated in a currency (e.g., "USD") and will have a specific tick size
 which is the minimum amount that the price can be quoted and transacted in 
 (e.g., $0.01).  We also define a 'multiplier' that is used when calculating 
 the notional value of a position or transaction using a quantity and price 
-(sometimes called a contract multiplier).  For a stock it's usually '1'.
+(sometimes called a contract multiplier).  For a stock it's usually '1'.  
 
 More care is needed when dealing with complex instruments, like futures.  
 First, we have to define a future as a root contract.  This root is not 
@@ -83,11 +83,11 @@ them in our environments), you can save the instrument environment using
 \code{\link{saveInstruments}}.  When you start a fresh R session, you 
 can load your instrument definitions using \code{loadInstruments}.  We 
 maintain an instrument.RData file that contains definitions for all 
-instruments for which we have market data on disk.
+instruments for which we have market data on disk.  
 
 You may want to use \code{\link{setSymbolLookup.FI}} to define 
 where and how your market data are stored so that 
-\code{\link[quantmod]{getSymbols}} will work for you.
+\code{\link[quantmod]{getSymbols}} will work for you. 
 
 FinancialInstrument's functions build and manipulate objects that are stored 
 in an environment named ".instrument" at the top level of the package 

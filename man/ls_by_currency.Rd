@@ -13,21 +13,9 @@
 \alias{ls_HKD}
 \alias{ls_SEK}
 \alias{ls_NZD}
-\alias{rm_by_currency}
-\alias{ls_USD}
-\alias{ls_AUD}
-\alias{ls_GBP}
-\alias{ls_CAD}
-\alias{ls_EUR}
-\alias{ls_JPY}
-\alias{ls_CHF}
-\alias{ls_HKD}
-\alias{ls_SEK}
-\alias{ls_NZD}
 \title{shows or removes instruments of given currency denomination(s)}
 \usage{
-ls_by_currency(currency, pattern = NULL, match = TRUE,
-  show.currencies = FALSE)
+ls_by_currency(currency, pattern = NULL, match = TRUE, show.currencies = FALSE)
 
 rm_by_currency(x, currency, keep.currencies = TRUE)
 

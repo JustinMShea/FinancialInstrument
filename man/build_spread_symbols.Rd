@@ -4,8 +4,12 @@
 \alias{build_spread_symbols}
 \title{build symbols for exchange guaranteed (calendar) spreads}
 \usage{
-build_spread_symbols(data = NULL, file = NULL, outputfile = NULL,
-  start_date = Sys.Date())
+build_spread_symbols(
+  data = NULL,
+  file = NULL,
+  outputfile = NULL,
+  start_date = Sys.Date()
+)
 }
 \arguments{
 \item{data}{data.frame containing at least columns \code{primary_id}, \code{month_cycle}, amd \code{contracts_ahead}, see Details}
@@ -35,14 +39,14 @@ the cycle on which the guaranteed calendar spreads are to be consructed,
 e.g. '1' for one-month spreads, '1,3' for one and three month spreads,
 '1,6,12' for 1, 6, and 12 month spreads, etc.  
 For quarterly symbols, the correct \code{contracts_ahead} may be 
-something like '1,2,3' for quarterly, bi-annual, and annual spreads.
+something like '1,2,3' for quarterly, bi-annual, and annual spreads.  
 
 \code{active_months} is a numeric field indicating how many months including  
 the month of the \code{start_date} the contract is available to trade.  
 This number will be used as the upper limit for symbol generation.
 
 If \code{type} is also specified, it should be a specific instrument type, 
-e.g. 'future_series','option_series','guaranteed_spread' or 'calendar_spread'
+e.g. 'future_series','option_series','guaranteed_spread' or 'calendar_spread' 
 
 One of \code{data} or \code{file} must be populated for input data.
 }

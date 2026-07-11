@@ -4,8 +4,13 @@
 \alias{update_instruments.instrument}
 \title{Update instruments with metadata from another instrument.}
 \usage{
-update_instruments.instrument(Symbols, source_id, create.new = FALSE,
-  ignore = "identifiers", assign_i = TRUE)
+update_instruments.instrument(
+  Symbols,
+  source_id,
+  create.new = FALSE,
+  ignore = "identifiers",
+  assign_i = TRUE
+)
 }
 \arguments{
 \item{Symbols}{charcter vector of primary_ids or other instrument identifiers.

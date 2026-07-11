@@ -3,40 +3,85 @@
 \name{synthetic}
 \alias{synthetic}
 \alias{synthetic.instrument}
-\alias{synthetic}
 \alias{spread}
 \alias{guaranteed_spread}
 \alias{butterfly}
-\alias{spread}
-\alias{butterfly}
-\alias{guaranteed_spread}
 \alias{ICS_root}
 \alias{ICS}
 \title{synthetic instrument constructors}
 \usage{
-synthetic(primary_id = NULL, currency = NULL, multiplier = 1,
-  identifiers = NULL, assign_i = TRUE, overwrite = TRUE, ...,
-  members = NULL, type = "synthetic")
+synthetic(
+  primary_id = NULL,
+  currency = NULL,
+  multiplier = 1,
+  identifiers = NULL,
+  assign_i = TRUE,
+  overwrite = TRUE,
+  ...,
+  members = NULL,
+  type = "synthetic"
+)
 
-synthetic.instrument(primary_id, currency, members, memberratio, ...,
-  multiplier = 1, tick_size = NULL, identifiers = NULL, assign_i = TRUE,
-  type = c("synthetic.instrument", "synthetic"))
+synthetic.instrument(
+  primary_id,
+  currency,
+  members,
+  memberratio,
+  ...,
+  multiplier = 1,
+  tick_size = NULL,
+  identifiers = NULL,
+  assign_i = TRUE,
+  type = c("synthetic.instrument", "synthetic")
+)
 
-spread(primary_id = NULL, currency = NULL, members, memberratio,
-  tick_size = NULL, ..., multiplier = 1, identifiers = NULL,
-  assign_i = TRUE)
+spread(
+  primary_id = NULL,
+  currency = NULL,
+  members,
+  memberratio,
+  tick_size = NULL,
+  ...,
+  multiplier = 1,
+  identifiers = NULL,
+  assign_i = TRUE
+)
 
-butterfly(primary_id = NULL, currency = NULL, members, tick_size = NULL,
-  identifiers = NULL, assign_i = TRUE, ...)
+butterfly(
+  primary_id = NULL,
+  currency = NULL,
+  members,
+  tick_size = NULL,
+  identifiers = NULL,
+  assign_i = TRUE,
+  ...
+)
 
-guaranteed_spread(primary_id = NULL, currency = NULL, root_id = NULL,
-  suffix_id = NULL, members = NULL, memberratio = c(1, -1), ...,
-  multiplier = NULL, identifiers = NULL, assign_i = TRUE,
-  tick_size = NULL)
+guaranteed_spread(
+  primary_id = NULL,
+  currency = NULL,
+  root_id = NULL,
+  suffix_id = NULL,
+  members = NULL,
+  memberratio = c(1, -1),
+  ...,
+  multiplier = NULL,
+  identifiers = NULL,
+  assign_i = TRUE,
+  tick_size = NULL
+)
 
-ICS_root(primary_id, currency = NULL, members, multiplier = NULL,
-  identifiers = NULL, assign_i = TRUE, overwrite = TRUE,
-  tick_size = NULL, ...)
+ICS_root(
+  primary_id,
+  currency = NULL,
+  members,
+  multiplier = NULL,
+  identifiers = NULL,
+  assign_i = TRUE,
+  overwrite = TRUE,
+  tick_size = NULL,
+  ...
+)
 
 ICS(primary_id, assign_i = TRUE, identifiers = NULL, ...)
 }
@@ -82,7 +127,7 @@ While properties like strike and expiration vary for these derivative contracts 
 
 More complex derivatives are typically modeled as baskets of underlying products, and are typically traded over-the-counter or as proprietary in-house products.
 
-The general \code{synthetic} function is intended to be extended to support these arbitrary baskets of assets.
+The general \code{synthetic} function is intended to be extended to support these arbitrary baskets of assets.  
 
 \code{spread} \code{guaranteed_spread} and \code{butterfly} are wrappers for \code{synthetic.instrument}. \code{synthetic.instrument} will make a call to synthetic to create the final instrument.
 

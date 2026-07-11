@@ -3,13 +3,15 @@
 \name{update_instruments.yahoo}
 \alias{update_instruments.yahoo}
 \alias{update_instruments.TTR}
-\alias{update_instruments.TTR}
 \title{updates instrument metadata with data from yahoo}
 \usage{
 update_instruments.yahoo(Symbols = c("stocks", "all"), verbose = FALSE)
 
-update_instruments.TTR(Symbols = c("stocks", "all"), exchange = c("AMEX",
-  "NASDAQ", "NYSE"), silent = FALSE)
+update_instruments.TTR(
+  Symbols = c("stocks", "all"),
+  exchange = c("AMEX", "NASDAQ", "NYSE"),
+  silent = FALSE
+)
 }
 \arguments{
 \item{Symbols}{can be a vector of instrument names, or, can be \sQuote{all}

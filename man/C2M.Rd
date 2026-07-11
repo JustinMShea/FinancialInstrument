@@ -3,7 +3,6 @@
 \name{C2M}
 \alias{C2M}
 \alias{M2C}
-\alias{M2C}
 \title{Month-to-Code and Code-to-Month}
 \usage{
 C2M(code)

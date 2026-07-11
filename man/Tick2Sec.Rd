@@ -7,8 +7,12 @@
 \usage{
 to_secBATV(x)
 
-alltick2sec(getdir = "~/TRTH/tick/", savedir = "~/TRTH/sec/",
-  Symbols = list.files(getdir), overwrite = FALSE)
+alltick2sec(
+  getdir = "~/TRTH/tick/",
+  savedir = "~/TRTH/sec/",
+  Symbols = list.files(getdir),
+  overwrite = FALSE
+)
 }
 \arguments{
 \item{x}{the xts series to convert to 1 minute BATV}
@@ -43,7 +47,7 @@ disk so that it will take less time to load the data into memory.
 If there are no trades or bid/ask price updates in a given second, we will 
 not make a row for that timestamp.  If there were no trades, but the bid or 
 ask price changed, then we _will_ have a row but the Volume and Trade.Price 
-will be NA.
+will be NA.  
 
 If there are multiple trades in the same second, Volume will be the sum of 
 the volume, but only the last trade price in that second will be printed. 

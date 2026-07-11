@@ -4,8 +4,14 @@
 \alias{find.instrument}
 \title{Find the primary_ids of instruments that contain certain strings}
 \usage{
-find.instrument(text, where = "anywhere", Symbols = ls_instruments(),
-  ignore.case = TRUE, exclude = NULL, ...)
+find.instrument(
+  text,
+  where = "anywhere",
+  Symbols = ls_instruments(),
+  ignore.case = TRUE,
+  exclude = NULL,
+  ...
+)
 }
 \arguments{
 \item{text}{character string containing a regular expression.  This is used 

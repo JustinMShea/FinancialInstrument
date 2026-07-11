@@ -4,8 +4,11 @@
 \alias{getSymbols.FI}
 \title{getSymbols method for loading data from split files}
 \usage{
-getSymbols.FI(Symbols, from = getOption("getSymbols.FI.from", "2010-01-01"),
-  to = getOption("getSymbols.FI.to", Sys.Date()), ...,
+getSymbols.FI(
+  Symbols,
+  from = getOption("getSymbols.FI.from", "2010-01-01"),
+  to = getOption("getSymbols.FI.to", Sys.Date()),
+  ...,
   dir = getOption("getSymbols.FI.dir", ""),
   return.class = getOption("getSymbols.FI.return.class", "xts"),
   extension = getOption("getSymbols.FI.extension", "rda"),
@@ -13,8 +16,9 @@ getSymbols.FI(Symbols, from = getOption("getSymbols.FI.from", "2010-01-01"),
   use_identifier = getOption("getSymbols.FI.use_identifier", NA),
   date_format = getOption("getSymbols.FI.date_format"),
   verbose = getOption("getSymbols.FI.verbose", TRUE),
-  days_to_omit = getOption("getSymbols.FI.days_to_omit", c("Saturday",
-  "Sunday")), indexTZ = getOption("getSymbols.FI.indexTZ", NA))
+  days_to_omit = getOption("getSymbols.FI.days_to_omit", c("Saturday", "Sunday")),
+  indexTZ = getOption("getSymbols.FI.indexTZ", NA)
+)
 }
 \arguments{
 \item{Symbols}{a character vector specifying the names of each symbol to be 

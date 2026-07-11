@@ -4,11 +4,18 @@
 \alias{option_series.yahoo}
 \title{constructor for series of options using yahoo data}
 \usage{
-option_series.yahoo(symbol, Exp, currency = "USD", multiplier = 100,
-  first_traded = NULL, tick_size = NULL, overwrite = TRUE)
+option_series.yahoo(
+  symbol,
+  Exp,
+  currency = "USD",
+  multiplier = 100,
+  first_traded = NULL,
+  tick_size = NULL,
+  overwrite = TRUE
+)
 }
 \arguments{
-\item{symbol}{character vector of ticker symbols of the underlying 
+\item{symbol}{character vector of ticker symbols of the underlying
 instruments (Currently, should only be stock tickers)}
 
 \item{Exp}{Expiration date or dates to be passed to getOptionChain}
@@ -17,7 +24,7 @@ instruments (Currently, should only be stock tickers)}
 
 \item{multiplier}{contract multiplier. Usually 100 for stock options}
 
-\item{first_traded}{first date that contracts are tradeable. Probably not 
+\item{first_traded}{first date that contracts are tradeable. Probably not
 applicable if defining several chains.}
 
 \item{tick_size}{minimum price change of options.}
@@ -25,19 +32,19 @@ applicable if defining several chains.}
 \item{overwrite}{if an instrument already exists, should it be overwritten?}
 }
 \value{
-Called for side-effect. The instrument that is created and stored 
+Called for side-effect. The instrument that is created and stored
   will inherit option_series, option, and instrument classes.
 }
 \description{
-Defines a chain or several chains of options by looking up necessary info 
+Defines a chain or several chains of options by looking up necessary info
 from yahoo.
 }
 \details{
-If \code{Exp} is missing it will define only the nearby options. 
+If \code{Exp} is missing it will define only the nearby options.
 If \code{Exp} is NULL it will define all options
 
-If \code{first_traded} and/or \code{tick_size} should not be the same for all 
-options being defined, they should be left NULL and defined outside of this 
+If \code{first_traded} and/or \code{tick_size} should not be the same for all
+options being defined, they should be left NULL and defined outside of this
 function.
 }
 \note{
@@ -55,7 +62,7 @@ ls_instruments()
 Yahoo \url{https://finance.yahoo.com}
 }
 \seealso{
-\code{\link{option_series}}, \code{\link{option}}, 
+\code{\link{option_series}}, \code{\link{option}},
   \code{\link{instrument}}, \code{\link[quantmod]{getOptionChain}}
 }
 \author{

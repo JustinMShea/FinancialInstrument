@@ -4,8 +4,7 @@
 \alias{ls_instruments_by}
 \title{Subset names of instruments}
 \usage{
-ls_instruments_by(what, value, in.slot = NULL, pattern = NULL,
-  match = TRUE)
+ls_instruments_by(what, value, in.slot = NULL, pattern = NULL, match = TRUE)
 }
 \arguments{
 \item{what}{What attribute? (e.g. \dQuote{currency}, \dQuote{type}, 

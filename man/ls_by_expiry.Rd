@@ -3,7 +3,6 @@
 \name{ls_by_expiry}
 \alias{ls_by_expiry}
 \alias{rm_by_expiry}
-\alias{rm_by_expiry}
 \title{list or remove instruments by expiration date}
 \usage{
 ls_by_expiry(expiry, pattern = NULL, match = TRUE)
