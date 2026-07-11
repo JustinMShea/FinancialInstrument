@@ -178,9 +178,9 @@ ls_instruments("SE") #only the one stock
 ls_instruments("S", match=FALSE) #anything with "S" in name
 
 ls_currencies()
-ls_stocks() 
-ls_options() 
-ls_futures() 
+ls_stocks()
+ls_options()
+ls_futures()
 ls_derivatives()
 ls_puts()
 ls_non_derivatives()

@@ -141,14 +141,8 @@ is.currency.name <- function( x ) {
 #' @param overwrite TRUE/FALSE. Should existing instruments with the same
 #'   primary_id be overwritten? Default is TRUE. If FALSE, an error will be
 #'   thrown and the instrument will not be created.
-#' @aliases
-#' stock
-#' bond
-#' future
-#' option
-#' currency
-#' instrument
-#' fund
+#' @aliases stock bond future option currency instrument fund
+#'
 #' @seealso
 #' \code{\link{currency}},
 #' \code{\link{exchange_rate}},
@@ -377,10 +371,8 @@ future <- function(primary_id , currency , multiplier , tick_size=NULL,
 #' @param overwrite TRUE/FALSE. If FALSE, only \code{first_traded} and
 #'   \code{expires} will be updated.
 #' @param ... any other passthru parameters
-#' @aliases
-#' option_series
-#' future_series
-#' bond_series
+#' @aliases option_series future_series bond_series
+#'
 #' @examples
 #' \dontrun{
 #' currency("USD")

@@ -79,9 +79,9 @@ ls_USD()
 ls_CAD()
 
 #2 ways to remove all instruments of a currency
-rm_instruments(ls_USD()) 
+rm_instruments(ls_USD())
 #rm_instruments(ls_GBP(),keep.currencies=FALSE)
-rm_by_currency( ,'CAD') 
+rm_by_currency( ,'CAD')
 #rm_by_currency( ,'CAD', keep.currencies=FALSE)
 }
 }
