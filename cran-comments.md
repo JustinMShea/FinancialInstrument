@@ -22,4 +22,4 @@ The following enhancements were made in the process
 
 * Migrated the unit testing framework from `testthat` to `tinytest`.
 * Enhanced test coverage for frequency-mixed `xts` time-series alignment.
-* Cleaned up internal documentation by refactoring helper functions and suppressing Rd generation for non-exported utilities.
+* Cleaned up internal documentation by refactoring quantmod helper functions and suppressing Rd generation for non-exported utilities.
