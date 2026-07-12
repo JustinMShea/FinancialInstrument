@@ -1,42 +1,55 @@
-Copyright: (c) 2004 - 2026
 Package: FinancialInstrument
-License: GPL
-Title: Financial Instrument Model Infrastructure for R
 Type: Package
-LazyLoad: yes
-Authors@R: c(person(given = "Peter",
-                      family = "Carl",
-                      role = "aut"),
-               person(given = c("Brian", "G."),
-                      family = "Peterson",
-                      role = "aut"),
-               person(given = "Garrett",
-                      family = "See",
-                      role = "aut"),
-               person(given = "Ross",
-                      family = "Bennett",
-                      role = "aut"),
-               person(given = c("Justin", "M."),
-                      family = "Shea",
-                      role = c("cre", "ctb"),
-                      email = "jshea01@uic.edu"))
-Description: Infrastructure for defining meta-data and
-    relationships for financial instruments.
+Title: Model Infrastructure for Financial Instruments
 Version: 1.4.0
-URL: https://github.com/braverock/FinancialInstrument
-Date: 2026-07-11
+Authors@R: c(
+person(
+given = "Peter",
+family = "Carl",
+role = "aut"
+),
+person(
+given = c("Brian", "G."),
+family = "Peterson",
+role = "aut"
+),
+person(
+given = "Garrett",
+family = "See",
+role = "aut"
+),
+person(
+given = "Ross",
+family = "Bennett",
+role = "aut"
+),
+person(
+given = c("Justin", "M."),
+family = "Shea",
+email = "[jshea01@uic.edu](mailto:jshea01@uic.edu)",
+role = c("cre", "ctb")
+)
+)
+Description: Provides infrastructure for defining, storing, updating, and
+retrieving metadata and relationships for financial instruments. Supports
+currencies, stocks, funds, bonds, futures, options, spreads, exchange
+rates, and synthetic instruments, together with contract specifications,
+identifiers, expiration dates, and underlying-instrument relationships.
+License: GPL-2 | GPL-3
+URL: https://github.com/JustinMShea/FinancialInstrument
+BugReports: https://github.com/JustinMShea/FinancialInstrument/issues
 Depends:
-    R (>= 3.0.0),
-    methods,
-    quantmod (>= 0.4-3),
-    zoo (>= 1.7-5),
-    xts (>= 0.10-0)
+R (>= 3.0.0),
+methods,
+quantmod (>= 0.4-3),
+zoo (>= 1.7-5),
+xts (>= 0.10-0)
 Imports:
-    TTR
+TTR
 Suggests:
-    foreach,
-    XML (>= 3.96.1.1),
-    tinytest,
-    timeSeries
+foreach,
+XML (>= 3.96.1.1),
+tinytest,
+timeSeries
 Encoding: UTF-8
-Config/roxygen2/version: 8.0.0
+RoxygenNote: 8.0.0
