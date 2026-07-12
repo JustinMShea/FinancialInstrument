@@ -1,11 +1,25 @@
 Copyright: (c) 2004 - 2026
 Package: FinancialInstrument
-Maintainer: Justin M. Shea <jshea01@uic.edu>
 License: GPL
 Title: Financial Instrument Model Infrastructure for R
 Type: Package
 LazyLoad: yes
-Author: Peter Carl, Brian G. Peterson, Garrett See, Ross Bennett
+Authors@R: c(person(given = "Peter",
+                      family = "Carl",
+                      role = "aut"),
+               person(given = c("Brian", "G."),
+                      family = "Peterson",
+                      role = "aut"),
+               person(given = "Garrett",
+                      family = "See",
+                      role = "aut"),
+               person(given = "Ross",
+                      family = "Bennett",
+                      role = "aut"),
+               person(given = c("Justin", "M."),
+                      family = "Shea",
+                      role = c("cre", "ctb"),
+                      email = "jshea01@uic.edu"))
 Description: Infrastructure for defining meta-data and
     relationships for financial instruments.
 Version: 1.4.0
