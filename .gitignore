@@ -33,6 +33,3 @@ vignettes/*.pdf
 *.knit.md
 .Rproj.user
 *.Rproj
-
-# dev related
-cran-comments.md
