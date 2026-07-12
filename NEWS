@@ -1,3 +1,20 @@
+# FinancialInstrument 1.4.0
+
+## New Maintainer
+
+* Justin M. Shea is taking over as the Maintainer from Ross Bennett. The development team would like to thank Ross for his years of stewardship.
+
+## Bug Fixes & CRAN Compliance
+
+* **S3 Consistency:** Fixed `expires.spread` method registration by correcting the syntax of its roxygen export tag.
+* **Rd Cross-References:** Added the explicit `[quantmod]` package anchor target to `setSymbolLookup` in the `instrument.auto` documentation.
+* **Roxygen2 Constraints:** Condensed all multi-line `@aliases` and `@importFrom` definitions down to strict single lines across `instrument.R`, `ls_by_currency.R`, `ls_instruments.R`, and `FinancialInstrument-package.R` to stop compilation errors.
+* **Package Documentation:** Cleared duplicate package-level documentation blocks and resolved an orphaned `NULL` reference that was causing parser crashes.
+* **Encoding:** Added explicit `Encoding: UTF-8` declaration to the package metadata.
+* **Migration:** Test suite has been completely migrated from `testthat` to `tinytest` to reduce package dependencies and improve test execution speed.
+* **Bug Fixes:** Fixed timezone and frequency alignment issues in the `redenominate` unit tests to ensure robust cross-platform testing. Added new intra-day test.
+* **Refactoring:** Moved internal `quantmod` helper functions (`has.Mid`, `convert.time.series`) to `R/utils_quantmod.R` and tagging them with `@noRd`.
+
 Changes in Version 1.3
 ======================
 
@@ -5,12 +22,12 @@ USER VISIBLE CHANGES
 --------------------
 
 * Ross Bennett is taking over as the Maintainer from Garrett See.
-  The development team would like to thank Garrett for his years of 
+  The development team would like to thank Garrett for his years of
   stewardship.
 
 * getSymbols.FI can now take a vector if identifiers in the "use_identifier"
-  argument.  
-  
+  argument.
+
 * removed Suggests for archived package 'its'
 
 
@@ -20,30 +37,30 @@ Changes in Version 1.2
 USER VISIBLE CHANGES
 --------------------
 
-* Requires quantmod >= 0.4-3 and no longer using the Defaults package 
+* Requires quantmod >= 0.4-3 and no longer using the Defaults package
   (which is now archived on CRAN) for importDefaults() in getSymbols.FI.
 
-* getSymbols.FI() allows the user to set default values by checking for 
-  options().  For example, the default value for from= is now 
+* getSymbols.FI() allows the user to set default values by checking for
+  options().  For example, the default value for from= is now
   getOption("getSymbols.FI.from", "2010-01-01").  So, if you do not set the
-  "getSymbols.FI.from" option, the value will be what it always has been 
-  ("2010-01-01"), but if you did set a value (e.g. 
+  "getSymbols.FI.from" option, the value will be what it always has been
+  ("2010-01-01"), but if you did set a value (e.g.
   options(getSymbols.FI.from="2014-01-01")), then that value will be used.
 
 * remove some `:::` calls to unexported functions from quantmod.
 
-* saveInstruments() gains a "compress" argument to allow for different 
+* saveInstruments() gains a "compress" argument to allow for different
   compression than the default ("gzip")
 
-* instrument() and most of its wrappers gain an "overwrite" argument. The 
-  default is TRUE to match previous behavior -- if you try to create an 
-  instrument that already exists, the old one will be replaced by 
+* instrument() and most of its wrappers gain an "overwrite" argument. The
+  default is TRUE to match previous behavior -- if you try to create an
+  instrument that already exists, the old one will be replaced by
   the new definition.  If overwrite=FALSE is used, there will be an error
-  if you try to define an instrument that has a primary_id that is already 
+  if you try to define an instrument that has a primary_id that is already
   in use.  Thanks to Charlie Friedemann for the suggestion and discussions.
 
 * load.instruments() gains an overwrite argument that is passed through to the
-  instrument() wrapper functions.  Therefore, load.instruments() no longer 
+  instrument() wrapper functions.  Therefore, load.instruments() no longer
   checks to see if an instrument already exists.  Thanks to Charlie Friedemann
   for the patch.
 
@@ -57,27 +74,27 @@ USER VISIBLE CHANGES
 BUG FIXES
 ---------
 
-* setSymbolLookup.FI was appending the Symbol to the directory, and 
-  getSymbols.FI was only adding the Symbol to the file path if the end of the 
+* setSymbolLookup.FI was appending the Symbol to the directory, and
+  getSymbols.FI was only adding the Symbol to the file path if the end of the
   path was not the same as the Symbol.  That meant that getSymbols.FI could not
   be used to get data for a Symbol that was the same as the base directory.
-  getSymbols.FI now always appends the Symbol to the file path and 
+  getSymbols.FI now always appends the Symbol to the file path and
   setSymbolLookup.FI does not append it to the base_dir. Test added.
 
 * In redenominate, if the object was a defined instrument, the currency in the
   instrument object would be used even if the user passed a different currency
-  in the old_base argument.  
+  in the old_base argument.
 
-* sort_ids() only worked in some locales when an instrument is not defined.  It 
-  now converts the month (returned by parse_id()) to numeric (with MC2N()) and 
-  uses the "%m" format in the as.Date call instead of using the month name with 
+* sort_ids() only worked in some locales when an instrument is not defined.  It
+  now converts the month (returned by parse_id()) to numeric (with MC2N()) and
+  uses the "%m" format in the as.Date call instead of using the month name with
   the (locale-specific) "%b" format.  Thanks to Alexis Petit for the patch.
 
-* when instrument() wrappers were called with vectors of symbols and 
+* when instrument() wrappers were called with vectors of symbols and
   assign_i=FALSE, the symbols were being returned instead of the instrument
-  objects.  Now, when `assign_i=FALSE` and `length(primary_id) > 1`, a 
-  named list of instruments will be returned.  Named lists of instruments are 
-  easy to work with since they can be passed directly to (re)loadInstruments(), 
+  objects.  Now, when `assign_i=FALSE` and `length(primary_id) > 1`, a
+  named list of instruments will be returned.  Named lists of instruments are
+  easy to work with since they can be passed directly to (re)loadInstruments(),
   or coerced to an environment with as.environment()
 
 
@@ -111,11 +128,11 @@ BUG FIXES
 
 * force evaluation of arguments to CompareInstrumentEnvironment()
 
-* option_series.yahoo() checks the results of the call to 
+* option_series.yahoo() checks the results of the call to
   quantmod::getOptionChain() and only uses rows that contain the ticker Symbol
   (sometimes in the off-hours, yahoo includes a bad row)
 
-* update_instruments.morningstar is slightly more robust.  It no longer 
+* update_instruments.morningstar is slightly more robust.  It no longer
   depends on the relevant table being the 4th on the page; instead it uses
   the table with the most rows.
 
@@ -132,6 +149,6 @@ USER VISIBLE CHANGES
 SANDBOX
 -------
 
-* The download.TrueFX.R script can now be called with Rscript. It accepts a 
+* The download.TrueFX.R script can now be called with Rscript. It accepts a
   trailing argument to specify the number of cores to use.
 
