@@ -111,4 +111,16 @@ Useful links:
 }
 
 }
+\author{
+\strong{Maintainer}: Justin M. Shea \email{jshea01@uic.edu} [contributor]
+
+Authors:
+\itemize{
+  \item Peter Carl
+  \item Brian G. Peterson
+  \item Garrett See
+  \item Ross Bennett
+}
+
+}
 \keyword{internal}

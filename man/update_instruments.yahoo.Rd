@@ -39,7 +39,7 @@ define the stocks if they do not already exist.
 \code{update_instruments.TTR} is only to be used on U.S. stocks denominated in USD.
 }
 \examples{
-\dontrun{	
+\dontrun{
 	stock('GS',currency('USD'))
  update_instruments.yahoo('GS')
 	getInstrument('GS')
@@ -48,12 +48,11 @@ define the stocks if they do not already exist.
 }
 }
 \references{
-Yahoo! Finance \url{finance.yahoo.com} YahooQuote
-\url{http://dirk.eddelbuettel.com/code/yahooquote.html} 
-gummy-stuff.org \url{www.gummy-stuff.org/Yahoo-data.htm}
+Yahoo! Finance "finance.yahoo.com" and YahooQuote
+\url{https://dirk.eddelbuettel.com/code/yahooquote.html}
 }
 \seealso{
-\code{\link{update_instruments.instrument}}, 
+\code{\link{update_instruments.instrument}},
   \code{\link{update_instruments.morningstar}},
   \code{\link{update_instruments.masterDATA}},
   \code{\link[TTR]{stockSymbols}}, \code{\link{stock}}

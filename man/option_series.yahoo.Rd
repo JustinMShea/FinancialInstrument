@@ -59,7 +59,7 @@ ls_instruments()
 }
 }
 \references{
-Yahoo \url{https://finance.yahoo.com}
+Yahoo Finance at "finance.yahoo.com"
 }
 \seealso{
 \code{\link{option_series}}, \code{\link{option}},
