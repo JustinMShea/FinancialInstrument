@@ -5,3 +5,4 @@ sandbox
 ^\.Rproj\.user$
 .travis.yml
 ^cran-comments\.md$
+^\.github$
