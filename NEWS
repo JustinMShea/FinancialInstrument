@@ -4,7 +4,7 @@
 
 * Justin M. Shea is taking over as the Maintainer from Ross Bennett. The development team would like to thank Ross for his years of stewardship.
 
-## Bug Fixes & CRAN Compliance
+## Bug Fixes, CRAN Compliance, and Enhancements
 
 * **S3 Consistency:** Fixed `expires.spread` method registration by correcting the syntax of its roxygen export tag.
 * **Rd Cross-References:** Added the explicit `[quantmod]` package anchor target to `setSymbolLookup` in the `instrument.auto` documentation.
@@ -14,6 +14,8 @@
 * **Migration:** Test suite has been completely migrated from `testthat` to `tinytest` to reduce package dependencies and improve test execution speed.
 * **Bug Fixes:** Fixed timezone and frequency alignment issues in the `redenominate` unit tests to ensure robust cross-platform testing. Added new intra-day test.
 * **Refactoring:** Moved internal `quantmod` helper functions (`has.Mid`, `convert.time.series`) to `R/utils_quantmod.R` and tagging them with `@noRd`.
+* **CI:** Added github actions.
+* **README.md:** Added a readme to cover package install and illustrate basic funcationality.
 
 Changes in Version 1.3
 ======================
