@@ -1,7 +1,6 @@
 # FinancialInstrument
 
 [![R-CMD-check](https://github.com/JustinMShea/FinancialInstrument/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/JustinMShea/FinancialInstrument/actions/workflows/R-CMD-check.yaml)
-[![URL check](https://github.com/JustinMShea/FinancialInstrument/actions/workflows/url-check.yaml/badge.svg)](https://github.com/JustinMShea/FinancialInstrument/actions/workflows/url-check.yaml)
 
 `FinancialInstrument` provides infrastructure for defining, storing, and retrieving metadata and relationships for tradable financial instruments in R. It supports currencies, stocks, funds, futures, options, spreads, synthetic instruments, and custom instrument classes.
 
