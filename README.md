@@ -2,7 +2,9 @@
 
 [![R-CMD-check](https://github.com/JustinMShea/FinancialInstrument/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/JustinMShea/FinancialInstrument/actions/workflows/R-CMD-check.yaml)
 
-FinancialInstrument provides infrastructure for defining, storing, and managing financial instrument metadata in R. Rather than focusing on market prices or returns, the package models the instruments themselves—their identities, specifications, and relationships. These instrument definitions can then be shared across research, trading, portfolio management, and analytics workflows.
+FinancialInstrument provides infrastructure for defining, storing, and managing financial instrument metadata in R. 
+Rather than focusing on market prices or returns, the package models the instruments themselves; their identities, specifications, and relationships. 
+These instrument definitions can then be shared across research, trading, portfolio management, and analytics workflows.
 
 The package supports currencies, equities, funds, futures, options, spreads, synthetic instruments, and custom instrument classes while remaining independent of any particular market data provider.
 
@@ -151,27 +153,6 @@ To replace the current instrument environment with the saved definitions:
 reloadInstruments("instruments.RData")
 ```
 
-## Development
-
-To check the exact source package that would be submitted to CRAN:
-
-```sh
-R CMD build .
-R CMD check --as-cran FinancialInstrument_*.tar.gz
-```
-
-## Continuous integration
-
-The repository includes GitHub Actions workflows that:
-
-- run `R CMD check` on Linux, macOS, and Windows;
-- test R release, R-devel, and the previous R release;
-- run on pushes and pull requests;
-- run weekly to identify breakage caused by changing dependencies;
-- build the source package and check its URLs.
-
-Workflow files are stored in `.github/workflows/`.
-
 ## Reporting problems
 
 Please report reproducible bugs and documentation problems through the [GitHub issue tracker](https://github.com/JustinMShea/FinancialInstrument/issues). Include:
@@ -183,4 +164,5 @@ Please report reproducible bugs and documentation problems through the [GitHub i
 
 ## License
 
-FinancialInstrument is distributed under the GNU General Public License.
+FinancialInstrument is distributed under a GNU General Public License, see the Description file for details. 
+The package is free software and comes with absolutely no warranty.
