@@ -2,7 +2,26 @@
 
 [![R-CMD-check](https://github.com/JustinMShea/FinancialInstrument/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/JustinMShea/FinancialInstrument/actions/workflows/R-CMD-check.yaml)
 
-`FinancialInstrument` provides infrastructure for defining, storing, and retrieving metadata and relationships for tradable financial instruments in R. It supports currencies, stocks, funds, futures, options, spreads, synthetic instruments, and custom instrument classes.
+FinancialInstrument provides infrastructure for defining, storing, and managing financial instrument metadata in R. Rather than focusing on market prices or returns, the package models the instruments themselves—their identities, specifications, and relationships. These instrument definitions can then be shared across research, trading, portfolio management, and analytics workflows.
+
+The package supports currencies, equities, funds, futures, options, spreads, synthetic instruments, and custom instrument classes while remaining independent of any particular market data provider.
+
+### Design Philosophy
+
+Most financial software begins with market data. FinancialInstrument begins with the instrument.
+
+A stock is more than a price series. A futures contract is more than a ticker. Every financial instrument has identity, metadata, relationships, and contract specifications that exist independently of any particular data vendor.
+
+For example:
+
+A futures root defines the common contract specification (currency, multiplier, tick size, exchange, and related metadata).
+Individual future series inherit those properties while adding contract-specific information such as expiration dates and identifiers.
+Options, spreads, and synthetic instruments build upon the same hierarchical model rather than requiring separate frameworks.
+
+This approach separates instrument metadata from market data, allowing a single instrument definition to be reused regardless of whether prices originate from Yahoo Finance, Bloomberg, Refinitiv, Interactive Brokers, Polygon, or another data source.
+
+FinancialInstrument therefore acts as an instrument registry and metadata model that can support many different quantitative finance workflows.
+
 
 ## Status
 
