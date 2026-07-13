@@ -454,9 +454,13 @@ future_series <- function(primary_id, root_id=NULL, suffix_id=NULL,
     if (!identical(integer(0), grep("NA",expires))) expires <- NULL
   }
 
-  contract<-getInstrument(root_id,type='future')
+  .validate_future_series_dates(
+    suffix_id = suffix_id,
+    first_traded = first_traded,
+    expires = expires
+  )
 
-  # TODO add check for Date equivalent in first_traded and expires
+  contract<-getInstrument(root_id,type='future')
 
   ## with futures series we probably need to be more sophisticated,
   ## and find the existing series from prior periods (probably years or months)
