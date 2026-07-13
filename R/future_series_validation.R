@@ -171,9 +171,17 @@
   }
 
   if (!is.null(first_info) && !is.null(expiry_info) &&
-      nrow(first_info) == 1L && nrow(expiry_info) == 1L &&
-      first_info$date > expiry_info$date) {
-    stop("'first_traded' must not be after 'expires'", call. = FALSE)
+      nrow(first_info) == 1L && nrow(expiry_info) == 1L) {
+    first_ym <- first_info$year * 12L + first_info$month
+    expiry_ym <- expiry_info$year * 12L + expiry_info$month
+
+    if (first_ym > expiry_ym ||
+        (first_ym == expiry_ym &&
+         first_info$precision == "day" &&
+         expiry_info$precision == "day" &&
+         first_info$date > expiry_info$date)) {
+      stop("'first_traded' must not be after 'expires'", call. = FALSE)
+    }
   }
 
   invisible(TRUE)
