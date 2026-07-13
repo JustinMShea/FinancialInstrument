@@ -93,6 +93,27 @@ expect_error(
 )
 
 # The first trading date cannot follow expiration.
+expect_silent(
+  future_series(
+    root_id = "ES",
+    suffix_id = "H27",
+    first_traded = "2027-03-15",
+    expires = "2027-03",
+    assign_i = FALSE
+  )
+)
+
+expect_error(
+  future_series(
+    root_id = "ES",
+    suffix_id = "H27",
+    first_traded = "2027-04-01",
+    expires = "2027-03",
+    assign_i = FALSE
+  ),
+  "must not be after"
+)
+
 expect_error(
   future_series(
     root_id = "ES",
