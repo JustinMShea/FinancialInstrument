@@ -19,13 +19,13 @@ Authors@R: c(person(given = "Peter",
                       role = c("cre", "ctb"),
                       email = "jshea01@uic.edu"))
 Description: Provides infrastructure for defining, storing, and managing
-financial instrument metadata independently of market data sources.
-Models instrument identities, contract specifications, identifiers, and
-relationships among financial instruments, including currencies,
-equities, funds, bonds, futures, options, spreads, exchange rates, and
-synthetic instruments. Supports reusable instrument definitions for
-research, portfolio management, trading, and quantitative finance
-applications.
+  financial instrument metadata independently of market data sources.
+  Models instrument identities, contract specifications, identifiers, and
+  relationships among financial instruments, including currencies,
+  equities, funds, bonds, futures, options, spreads, exchange rates, and
+  synthetic instruments. Supports reusable instrument definitions for
+  research, portfolio management, trading, and quantitative finance
+  applications.
 License: GPL-2 | GPL-3
 URL: https://github.com/JustinMShea/FinancialInstrument
 BugReports: https://github.com/JustinMShea/FinancialInstrument/issues
