@@ -217,4 +217,21 @@ expect_silent(
   )
 )
 
+expect_error(
+  option_series(
+    "SPY_270319C600",
+    root_id = ".SPY",
+    expires = as.POSIXlt(
+      c(
+        "2027-03-19 16:00:00",
+        "2027-03-20 16:00:00"
+      ),
+      tz = "America/Chicago"
+    ),
+    assign_i = FALSE
+  ),
+  "must be a single date"
+)
+
+
 rm_instruments(keep.currencies = FALSE)

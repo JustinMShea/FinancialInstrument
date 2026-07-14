@@ -48,10 +48,6 @@
         parsed
     }
 
-    if (inherits(x, "POSIXlt")) {
-        x <- as.POSIXct(x)
-    }
-
     as.Date(vapply(as.list(x), parse_one, as.Date("1970-01-01")),
             origin = "1970-01-01")
 }
