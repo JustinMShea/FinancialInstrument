@@ -166,7 +166,7 @@ expect_error(
 )
 
 
-# POSIXct expiration values are accepted.
+# POSIXct expiration values are accepted and normalized.
 posix_expiry <- as.POSIXct(
   "2027-03-19 16:00:00",
   tz = "America/Chicago"
@@ -179,12 +179,13 @@ posix_contract <- option_series(
   assign_i = FALSE
 )
 
-expect_equal(
-  as.Date(posix_contract$expires),
-  as.Date("2027-03-19")
+expect_identical(
+  posix_contract$expires,
+  "2027-03-19"
 )
 
-# POSIXlt values are also accepted.
+
+# POSIXlt expiration values are accepted and normalized.
 posixlt_expiry <- as.POSIXlt(
   "2027-03-19 16:00:00",
   tz = "America/Chicago"
@@ -197,9 +198,9 @@ posixlt_contract <- option_series(
   assign_i = FALSE
 )
 
-expect_equal(
-  as.Date(posixlt_contract$expires),
-  as.Date("2027-03-19")
+expect_identical(
+  posixlt_contract$expires,
+  "2027-03-19"
 )
 
 
