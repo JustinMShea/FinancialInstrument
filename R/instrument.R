@@ -561,24 +561,28 @@ option_series <- function(primary_id , root_id = NULL, suffix_id = NULL,
         } else { #if you give it only a root_id it will make the suffix_id
                  #using expires, callput, and strike
             if (is.null(suffix_id)) {
-                sdate <- if (nchar(expires) == 8) {
-                    try(as.Date(expires, format='%Y%m%d'), silent=TRUE)
-                } else try(as.Date(expires),silent=TRUE)
-                if (inherits(sdate,'try-error')) {
-                    stop("expires is missing or of incorrect format")
+                sdate <- .option_series_date(expires, "expires")
+                if (is.null(sdate)) {
+                    stop("must provide 'expires' or a 'suffix_id'",
+                         call. = FALSE)
                 }
-                sright <- try(switch(callput, C=,c=,call="C", P=,p=,put="P"),
-                              silent=TRUE)
-                if (inherits(sright,'try-error')) {
-                    stop(paste("must provide 'callput' or a 'suffix_id'",
-                               "from which 'callput' can be inferred."))
-                }
+                normalized_callput <- .normalize_option_callput(
+                    callput,
+                    allow_default = FALSE
+                )
+                strike <- .validate_option_strike(strike)
                 if (is.null(strike)) {
                     stop(paste("must provide 'strike' or a 'suffix_id'",
-                               "from which 'strike' can be inferred."))
+                               "from which 'strike' can be inferred."),
+                         call. = FALSE)
                 }
-                suffix_id <- paste(format(sdate,'%y%m%d'), sright, strike,
-                                   sep="")
+                sright <- if (identical(normalized_callput, "call")) {
+                    "C"
+                } else {
+                    "P"
+                }
+                suffix_id <- paste(format(sdate, '%y%m%d'), sright, strike,
+                                   sep = "")
             }
             primary_id <- paste(gsub("\\.","",root_id), suffix_id, sep="_")
         }
@@ -616,29 +620,21 @@ option_series <- function(primary_id , root_id = NULL, suffix_id = NULL,
     pid <- parse_id(primary_id)
     if (is.null(root_id)) root_id <- pid$root
     if (is.null(suffix_id)) suffix_id <- pid$suffix
-    if (is.null(strike)) {
-        if (is.na(pid$strike)) stop('strike must be provided.')
-        strike <- pid$strike
-    }
-    if (is.null(expires)) {
-        #TODO: option_series ids contain the entire date.
-        #      Don't have to settle for YYYY-MM
-        expires <- paste(pid$year,
-                         sprintf("%02d",match(pid$month,
-                                              toupper(month.abb))),sep='-')
-        if (!identical(integer(0), grep("NA",expires))) {
-            stop(paste("must provide 'expires' formatted '%Y-%m-%d',",
-                       "or a 'suffix_id' from which to infer 'expires'"))
-        }
-    }
+    validated <- .validate_option_series_fields(
+        suffix_id = suffix_id,
+        expires = expires,
+        first_traded = first_traded,
+        callput = callput,
+        strike = strike
+    )
+    expires <- validated$expires
+    callput <- validated$callput
+    strike <- validated$strike
+
     contract<-getInstrument(root_id, type='option')
     ## with options series we probably need to be more sophisticated,
     ## and find the existing series from prior periods (probably years)
     ## and then add the first_traded and expires to the time series
-    if(length(callput)==2) callput <- switch(pid$right, C='call', P='put')
-    if (is.null(callput)) {
-        stop("value of callput must be specified as 'call' or 'put'")
-    }
     if (!isTRUE(overwrite)) {
         temp_series<-try(getInstrument(primary_id, silent=TRUE),silent=TRUE)
         if(inherits(temp_series,"option_series")) {
