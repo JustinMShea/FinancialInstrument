@@ -3,13 +3,16 @@
 .option_series_date <- function(x, argument, allow_multiple = FALSE) {
     if (is.null(x)) return(NULL)
 
+    if (inherits(x, "POSIXlt")) {
+        x <- as.POSIXct(x)
+    }
+
     if (!allow_multiple && length(x) != 1L) {
         stop("'", argument, "' must be a single date", call. = FALSE)
     }
     if (length(x) < 1L || anyNA(x)) {
         stop("'", argument, "' must not contain missing values", call. = FALSE)
     }
-
   parse_one <- function(value) {
     if (inherits(value, "Date")) {
       return(value)
