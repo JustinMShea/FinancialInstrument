@@ -195,7 +195,7 @@
     }
 
     list(
-        expires = if (is.null(expires)) format(expiration) else expires,
+        expires = format(expiration),
         callput = resolved_callput,
         strike = resolved_strike
     )
