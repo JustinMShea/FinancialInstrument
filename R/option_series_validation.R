@@ -12,6 +12,7 @@
 
     parse_one <- function(value) {
         if (inherits(value, "Date")) return(value)
+        if (inherits(value, "POSIXt")) return(as.Date(value))
 
         value <- as.character(value)
         parsed <- tryCatch(
