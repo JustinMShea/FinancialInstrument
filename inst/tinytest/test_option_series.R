@@ -166,4 +166,54 @@ expect_error(
 )
 
 
+# POSIXct expiration values are accepted.
+posix_expiry <- as.POSIXct(
+  "2027-03-19 16:00:00",
+  tz = "America/Chicago"
+)
+
+posix_contract <- option_series(
+  "SPY_270319C600",
+  root_id = ".SPY",
+  expires = posix_expiry,
+  assign_i = FALSE
+)
+
+expect_equal(
+  as.Date(posix_contract$expires),
+  as.Date("2027-03-19")
+)
+
+# POSIXlt values are also accepted.
+posixlt_expiry <- as.POSIXlt(
+  "2027-03-19 16:00:00",
+  tz = "America/Chicago"
+)
+
+posixlt_contract <- option_series(
+  "SPY_270319C600",
+  root_id = ".SPY",
+  expires = posixlt_expiry,
+  assign_i = FALSE
+)
+
+expect_equal(
+  as.Date(posixlt_contract$expires),
+  as.Date("2027-03-19")
+)
+
+
+expect_silent(
+  option_series(
+    "SPY_270319C600",
+    root_id = ".SPY",
+    expires = as.Date("2027-03-19"),
+    first_traded = as.POSIXct(
+      "2027-03-01 09:30:00",
+      tz = "America/New_York"
+    ),
+    assign_i = FALSE
+  )
+)
+
 rm_instruments(keep.currencies = FALSE)

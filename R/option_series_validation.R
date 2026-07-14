@@ -10,11 +10,26 @@
         stop("'", argument, "' must not contain missing values", call. = FALSE)
     }
 
-    parse_one <- function(value) {
-        if (inherits(value, "Date")) return(value)
-        if (inherits(value, "POSIXt")) return(as.Date(value))
+  parse_one <- function(value) {
+    if (inherits(value, "Date")) {
+      return(value)
+    }
 
-        value <- as.character(value)
+    if (inherits(value, "POSIXt")) {
+      tz <- attr(value, "tzone")
+
+      if (is.null(tz) || length(tz) == 0L ||
+          is.na(tz[[1L]]) || !nzchar(tz[[1L]])) {
+        tz <- "UTC"
+      } else {
+        tz <- tz[[1L]]
+      }
+
+      return(as.Date(value, tz = tz))
+    }
+
+    value <- as.character(value)
+
         parsed <- tryCatch(
             if (grepl("^[0-9]{8}$", value)) {
                 as.Date(value, format = "%Y%m%d")
