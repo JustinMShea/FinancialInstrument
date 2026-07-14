@@ -55,7 +55,7 @@
         return(NULL)
     }
     if (length(callput) != 1L || is.na(callput)) {
-        stop("'callput' must be one of 'call', 'put', 'C', or 'P'",
+        stop("'callput' must be a single value: 'call', 'put', 'C', or 'P'",
              call. = FALSE)
     }
 
