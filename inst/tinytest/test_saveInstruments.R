@@ -2,7 +2,7 @@
 # Covers: explicit output paths, RData and R/txt formats, state restore.
 
 test_dir <- tempfile("fi-test-save-")
-dir.create(test_dir)
+dir.create(test_dir, recursive = TRUE, showWarnings = FALSE)
 
 # ---- helpers ---------------------------------------------------------------
 cleanup <- function() {
