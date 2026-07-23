@@ -1,27 +1,15 @@
 #' Update instrument metadata for ETFs
-#' 
+#'
 #' Currently, this only updates ETFs.  It will add \dQuote{msName} and
 #' \dQuote{msCategory} attributes to the instruments. (ms for morningstar)
 #' @param Symbols character vector of Symbols of ETFs
 #' @param silent silence warnings?
-#' @return called for side-effect. 
+#' @return called for side-effect.
 #' @author Garrett See
 #' @references \url{http://www.morningstar.com}
-#' @seealso \code{\link{update_instruments.yahoo}}, 
+#' @seealso \code{\link{update_instruments.yahoo}},
 #' \code{\link{update_instruments.TTR}}
 #' \code{\link{update_instruments.iShares}}
-#' @examples
-#' \dontrun{
-#' ## backup .instrument environment
-#' ibak <- as.list(FinancialInstrument:::.instrument) 
-#' rm_instruments()
-#' stock(s <- c("SPY", "USO", "LQD"), currency("USD"))
-#' update_instruments.morningstar(s)
-#' instrument.table(s)
-#' ## cleanup and restore instrument environment
-#' rm_instruments(keep.currencies=FALSE)
-#' loadInstruments(ibak)
-#' }
 #' @export
 update_instruments.morningstar <- function(Symbols, silent=FALSE) {
     if(!requireNamespace("XML", quietly=TRUE))
@@ -44,7 +32,7 @@ update_instruments.morningstar <- function(Symbols, silent=FALSE) {
     s <- Symbols[Symbols %in% tickers]
     if (length(s) > 0) {
         # only those that inherit stock or fund
-        s <- s[sapply(lapply(s, getInstrument, type=c("stock", "fund"), 
+        s <- s[sapply(lapply(s, getInstrument, type=c("stock", "fund"),
                              silent = TRUE), is.instrument)]
     }
     if (length(s) == 0) {
@@ -58,10 +46,10 @@ update_instruments.morningstar <- function(Symbols, silent=FALSE) {
     for (i in 1:NROW(x)) {
         instrument_attr(rn[i], "msName", x$Name[i])
         instrument_attr(rn[i], "msCategory", x$Category[i])
-        #instrument_attr(x$Symbol[i], "msTradingVolume", 
+        #instrument_attr(x$Symbol[i], "msTradingVolume",
         #                as.numeric(gsub(",", "", x$TradingVolume[i])))
         db <- getInstrument(rn[i])$defined.by
-        instrument_attr(rn[i], "defined.by", paste(c(db, "morningstar"), 
+        instrument_attr(rn[i], "defined.by", paste(c(db, "morningstar"),
                                                    collapse=";"))
         instrument_attr(rn[i], "updated", Sys.time())
     }
