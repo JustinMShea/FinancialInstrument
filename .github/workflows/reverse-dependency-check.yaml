@@ -91,33 +91,46 @@ jobs:
       - name: Install blotter
         run: R CMD INSTALL revdeps/blotter
 
-      - name: Verify FinancialInstrument and blotter
+            - name: Verify FinancialInstrument and blotter
         shell: Rscript {0}
         run: |
-          expected_fi <- read.dcf(
-            "DESCRIPTION",
-            fields = "Version"
-          )[1, 1]
-
-          expected_blotter <- read.dcf(
-            "revdeps/blotter/DESCRIPTION",
-            fields = "Version"
-          )[1, 1]
-
-          installed_fi <- as.character(
-            packageVersion("FinancialInstrument")
+          expected_fi <- package_version(
+            read.dcf(
+              "DESCRIPTION",
+              fields = "Version"
+            )[1, 1]
           )
 
-          installed_blotter <- as.character(
-            packageVersion("blotter")
+          expected_blotter <- package_version(
+            read.dcf(
+              "revdeps/blotter/DESCRIPTION",
+              fields = "Version"
+            )[1, 1]
           )
 
-          cat("FinancialInstrument:", installed_fi, "\n")
-          cat("blotter:", installed_blotter, "\n")
+          installed_fi <- packageVersion(
+            "FinancialInstrument"
+          )
+
+          installed_blotter <- packageVersion(
+            "blotter"
+          )
+
+          cat(
+            "FinancialInstrument:",
+            as.character(installed_fi),
+            "\n"
+          )
+
+          cat(
+            "blotter:",
+            as.character(installed_blotter),
+            "\n"
+          )
 
           stopifnot(
-            identical(installed_fi, expected_fi),
-            identical(installed_blotter, expected_blotter)
+            installed_fi == expected_fi,
+            installed_blotter == expected_blotter
           )
 
       - name: Check blotter
