@@ -51,9 +51,43 @@
 #' \code{\link[quantmod]{getSymbols}},
 #' \code{\link{getSymbols.FI}}
 #' @examples
-#' load.instruments(system.file('data/currencies.csv.gz',package='FinancialInstrument'))
-#' load.instruments(system.file('data/root_contracts.csv.gz',package='FinancialInstrument'))
-#' load.instruments(system.file('data/future_series.csv.gz',package='FinancialInstrument'))
+#' example_ids <- c(
+#'   "FI_EXAMPLE_A",
+#'   "FI_EXAMPLE_B"
+#' )
+#'
+#' had_usd <- is.currency.name("USD")
+#'
+#' tryCatch(
+#'   {
+#'     if (!had_usd) {
+#'       currency("USD")
+#'     }
+#'
+#'     metadata <- data.frame(
+#'       primary_id = example_ids,
+#'       type = c("stock", "stock"),
+#'       currency = c("USD", "USD"),
+#'       description = c(
+#'         "Example instrument A",
+#'         "Example instrument B"
+#'       ),
+#'       stringsAsFactors = FALSE
+#'     )
+#'
+#'     load.instruments(metadata = metadata)
+#'
+#'     getInstrument("FI_EXAMPLE_A")
+#'     getInstrument("FI_EXAMPLE_B")
+#'   },
+#'   finally = {
+#'     rm_instruments(example_ids)
+#'
+#'     if (!had_usd) {
+#'       rm_currencies("USD")
+#'     }
+#'   }
+#' )
 #'
 #' @export
 load.instruments <- function (file=NULL, ..., metadata=NULL, id_col=1, default_type='stock', identifier_cols=NULL, overwrite=TRUE) {
@@ -286,12 +320,50 @@ setSymbolLookup.FI<-function(base_dir, Symbols, ..., split_method=c("days","comm
 #' \code{\link{loadInstruments}}
 #' \code{\link[quantmod]{getSymbols}}
 #' @examples
-#' getSymbols("SPY", src='yahoo')
-#' dir.create("tmpdata")
-#' saveSymbols.common("SPY", base_dir="tmpdata")
-#' rm("SPY")
-#' getSymbols("SPY", src='FI', dir="tmpdata", split_method='common')
-#' unlink("tmpdata/SPY", recursive=TRUE)
+#' example_dir <- tempfile("fi-symbol-data-")
+#' dir.create(example_dir)
+#'
+#' data_env <- new.env()
+#'
+#' data_env$FI_EXAMPLE <- xts::xts(
+#'   cbind(
+#'     Close = c(100, 101, 102, 101),
+#'     Volume = c(1000, 1200, 900, 1100)
+#'   ),
+#'   order.by = as.Date("2020-01-01") + 0:3
+#' )
+#'
+#' tryCatch(
+#'   {
+#'     saveSymbols.common(
+#'       Symbols = "FI_EXAMPLE",
+#'       base_dir = example_dir,
+#'       env = data_env
+#'     )
+#'
+#'     loaded_data <- getSymbols.FI(
+#'       Symbols = "FI_EXAMPLE",
+#'       dir = example_dir,
+#'       split_method = "common",
+#'       auto.assign = FALSE,
+#'       verbose = FALSE
+#'     )
+#'
+#'     stopifnot(
+#'       xts::is.xts(loaded_data),
+#'       NROW(loaded_data) == 4L,
+#'       identical(
+#'         colnames(loaded_data),
+#'         c("Close", "Volume")
+#'       )
+#'     )
+#'
+#'     loaded_data
+#'   },
+#'   finally = {
+#'     unlink(example_dir, recursive = TRUE)
+#'   }
+#' )
 #'
 #' @export
 getSymbols.FI <- function(Symbols,

@@ -12,93 +12,124 @@
 #
 ###############################################################################
 
-#' shows or removes instruments of given currency denomination(s)
+#' List instruments by currency denomination
 #'
-#' ls_ functions get names of instruments denominated in a given currency (or
-#' currencies) rm_ functions remove instruments of a given currency
+#' Returns the names of instruments denominated in one or more specified
+#' currencies.
 #'
+#' @param currency Character vector containing the names of currencies.
+#' @param pattern An optional regular expression. Only instrument names
+#'   matching `pattern` are returned.
+#' @param match Logical. Should `pattern` be matched exactly?
+#' @param show.currencies Logical. Should currency instruments themselves be
+#'   included in the returned names?
 #'
-#' @aliases ls_by_currency rm_by_currency ls_USD ls_AUD ls_GBP ls_CAD ls_EUR ls_JPY ls_CHF ls_HKD ls_SEK ls_NZD
-#' @param currency chr vector of names of currency
-#' @param pattern an optional regular expression.  Only names matching
-#' \sQuote{pattern} are returned.
-#' @param match exact match?
-#' @param show.currencies include names of currency instruments in the returned
-#' names?
-#' @param keep.currencies Do not delete currency instruments when deleting
-#' multiple instruments.
-#' @param x what to remove. chr vector.
-#' @return ls_ functions return vector of instrument names rm_ functions return
-#' invisible / called for side-effect.
+#' @return A character vector containing instrument names denominated in the
+#'   requested currencies, or `NULL` when no matching instruments are found.
+#'
 #' @author Garrett See
-#' @seealso ls_instruments, ls_currencies, rm_instruments, rm_currencies,
-#' twsInstrument, instrument
+#'
+#' @seealso
+#' [ls_instruments()], [ls_currencies()], [rm_instruments()],
+#' [rm_currencies()], [instrument()]
+#'
 #' @examples
-#' backup_file <- tempfile(fileext = ".RData")
-#' saveInstruments(backup_file)
+#' example_dir <- tempfile("fi-currency-")
+#' dir.create(example_dir)
 #'
-#' rm_instruments(keep.currencies = FALSE)
-#' currency(c("USD", "CAD", "GBP"))
-#' stock(c("CM", "CNQ"), "CAD")
-#' stock(c("BARC", "BET"), "GBP")
-#' stock(c("DIA", "SPY"), "USD")
+#' backup_name <- "backup.RData"
+#' backup_path <- file.path(example_dir, backup_name)
 #'
-#' ls_by_currency(c("CAD", "GBP"))
-#' ls_USD()
-#' ls_CAD()
+#' saveInstruments(backup_name, dir = example_dir)
 #'
-#' rm_by_currency(currency = "CAD")
+#' tryCatch(
+#'   {
+#'     rm_instruments(keep.currencies = FALSE)
 #'
-#' reloadInstruments(backup_file)
-#' unlink(backup_file)
+#'     currency(c("USD", "CAD", "GBP"))
+#'     stock(c("CM", "CNQ"), currency = "CAD")
+#'     stock(c("BARC", "BET"), currency = "GBP")
+#'     stock(c("DIA", "SPY"), currency = "USD")
+#'
+#'     ls_by_currency("CAD")
+#'     ls_by_currency("GBP")
+#'     ls_USD()
+#'     ls_CAD()
+#'   },
+#'   finally = {
+#'     if (file.exists(backup_path)) {
+#'       reloadInstruments(
+#'         backup_name,
+#'         dir = example_dir
+#'       )
+#'     }
+#'
+#'     unlink(example_dir, recursive = TRUE)
+#'   }
+#' )
 #'
 #' @export
 #' @rdname ls_by_currency
-ls_by_currency <- function(currency, pattern=NULL, match=TRUE,show.currencies=FALSE) {
-    if (length(pattern) > 1 && !match) {
-        warning("Using match because length of pattern > 1.")
-        #should I use match?
-        #or, ignore pattern and return everything?
-        #or, do multiple ls calls and return unique
-        match <- TRUE
+ls_by_currency <- function(
+    currency,
+    pattern = NULL,
+    match = TRUE,
+    show.currencies = FALSE
+) {
+  if (length(pattern) > 1L && !match) {
+    warning("Using match because length of pattern > 1.")
+    match <- TRUE
+  }
+
+  undefined_currencies <- currency[
+    !currency %in% ls_currencies()
+  ]
+
+  if (length(undefined_currencies)) {
+    warning(
+      paste(undefined_currencies, collapse = ", "),
+      if (length(undefined_currencies) == 1L) {
+        " is not a defined currency"
+      } else {
+        " are not defined currencies"
+      },
+      call. = FALSE
+    )
+  }
+
+  if (!is.null(pattern) && match) {
+    symbols <- ls_instruments()
+    symbols <- symbols[match(pattern, symbols)]
+  } else if (!match && length(pattern) == 1L) {
+    symbols <- ls_instruments(pattern = pattern)
+  } else if (is.null(pattern)) {
+    symbols <- ls_instruments()
+  }
+
+  tmp_symbols <- NULL
+
+  for (symbol in symbols) {
+    tmp_instr <- try(
+      get(symbol, pos = .instrument),
+      silent = TRUE
+    )
+
+    if (
+      is.instrument(tmp_instr) &&
+      !is.null(tmp_instr$currency) &&
+      any(tmp_instr$currency %in% currency)
+    ) {
+      tmp_symbols <- c(tmp_symbols, symbol)
     }
+  }
 
-	if (!(currency %in% ls_currencies()) ) {
-		warning(paste(currency, 'is not a defined currency', sep=" "))
-	}
-
-    if (!is.null(pattern) && match) {   #there's a pattern and match is TRUE
-        symbols <- ls_instruments()
-        symbols <- symbols[match(pattern,symbols)]
-    } else if (!match && length(pattern) == 1) { # pattern is length(1) and match is FALSE
-        symbols <- ls_instruments(pattern=pattern)
-    } else if (is.null(pattern)) {  #no pattern
-        symbols <- ls_instruments()
-    } # else pattern length > 1 & don't match
-
-    tmp_symbols <- NULL
-    for (symbol in symbols) {
-        tmp_instr <- try(get(symbol, pos = .instrument),silent=TRUE)
-        if (is.instrument(tmp_instr) &&
-          tmp_instr$currency == currency ){
-            tmp_symbols <- c(tmp_symbols,symbol)
-        }
-    }
-    if (show.currencies) {
-      tmp_symbols
-    } else if (!is.null(tmp_symbols)) {
-		ls_non_currencies(tmp_symbols)
-	} else NULL
-}
-
-#' @export
-#' @rdname ls_by_currency
-rm_by_currency <- function(x,currency,keep.currencies=TRUE) {
-    sc <- !keep.currencies #make show.currencies==opposite of keep
-    if (missing(x)) {
-        x <- ls_by_currency(currency,show.currencies=sc)
-    } else x <- ls_by_currency(currency,pattern=x,show.currencies=sc)
-    rm(list=x,pos=.instrument)
+  if (show.currencies) {
+    tmp_symbols
+  } else if (!is.null(tmp_symbols)) {
+    ls_non_currencies(tmp_symbols)
+  } else {
+    NULL
+  }
 }
 
 #AUD GBP CAD EUR JPY CHF HKD SEK NZD

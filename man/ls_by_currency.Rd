@@ -2,7 +2,6 @@
 % Please edit documentation in R/ls_by_currency.R
 \name{ls_by_currency}
 \alias{ls_by_currency}
-\alias{rm_by_currency}
 \alias{ls_USD}
 \alias{ls_AUD}
 \alias{ls_GBP}
@@ -13,11 +12,9 @@
 \alias{ls_HKD}
 \alias{ls_SEK}
 \alias{ls_NZD}
-\title{shows or removes instruments of given currency denomination(s)}
+\title{List instruments by currency denomination}
 \usage{
 ls_by_currency(currency, pattern = NULL, match = TRUE, show.currencies = FALSE)
-
-rm_by_currency(x, currency, keep.currencies = TRUE)
 
 ls_USD(pattern = NULL, match = TRUE, show.currencies = FALSE)
 
@@ -40,52 +37,63 @@ ls_SEK(pattern = NULL, match = TRUE, show.currencies = FALSE)
 ls_NZD(pattern = NULL, match = TRUE, show.currencies = FALSE)
 }
 \arguments{
-\item{currency}{chr vector of names of currency}
+\item{currency}{Character vector containing the names of currencies.}
 
-\item{pattern}{an optional regular expression.  Only names matching
-\sQuote{pattern} are returned.}
+\item{pattern}{An optional regular expression. Only instrument names
+matching `pattern` are returned.}
 
-\item{match}{exact match?}
+\item{match}{Logical. Should `pattern` be matched exactly?}
 
-\item{show.currencies}{include names of currency instruments in the returned
-names?}
-
-\item{x}{what to remove. chr vector.}
-
-\item{keep.currencies}{Do not delete currency instruments when deleting
-multiple instruments.}
+\item{show.currencies}{Logical. Should currency instruments themselves be
+included in the returned names?}
 }
 \value{
-ls_ functions return vector of instrument names rm_ functions return
-invisible / called for side-effect.
+A character vector containing instrument names denominated in the
+  requested currencies, or `NULL` when no matching instruments are found.
 }
 \description{
-ls_ functions get names of instruments denominated in a given currency (or
-currencies) rm_ functions remove instruments of a given currency
+Returns the names of instruments denominated in one or more specified
+currencies.
 }
 \examples{
-backup_file <- tempfile(fileext = ".RData")
-saveInstruments(backup_file)
+example_dir <- tempfile("fi-currency-")
+dir.create(example_dir)
 
-rm_instruments(keep.currencies = FALSE)
-currency(c("USD", "CAD", "GBP"))
-stock(c("CM", "CNQ"), "CAD")
-stock(c("BARC", "BET"), "GBP")
-stock(c("DIA", "SPY"), "USD")
+backup_name <- "backup.RData"
+backup_path <- file.path(example_dir, backup_name)
 
-ls_by_currency(c("CAD", "GBP"))
-ls_USD()
-ls_CAD()
+saveInstruments(backup_name, dir = example_dir)
 
-rm_by_currency(currency = "CAD")
+tryCatch(
+  {
+    rm_instruments(keep.currencies = FALSE)
 
-reloadInstruments(backup_file)
-unlink(backup_file)
+    currency(c("USD", "CAD", "GBP"))
+    stock(c("CM", "CNQ"), currency = "CAD")
+    stock(c("BARC", "BET"), currency = "GBP")
+    stock(c("DIA", "SPY"), currency = "USD")
+
+    ls_by_currency("CAD")
+    ls_by_currency("GBP")
+    ls_USD()
+    ls_CAD()
+  },
+  finally = {
+    if (file.exists(backup_path)) {
+      reloadInstruments(
+        backup_name,
+        dir = example_dir
+      )
+    }
+
+    unlink(example_dir, recursive = TRUE)
+  }
+)
 
 }
 \seealso{
-ls_instruments, ls_currencies, rm_instruments, rm_currencies,
-twsInstrument, instrument
+[ls_instruments()], [ls_currencies()], [rm_instruments()],
+[rm_currencies()], [instrument()]
 }
 \author{
 Garrett See

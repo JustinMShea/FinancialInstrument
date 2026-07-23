@@ -56,9 +56,43 @@ Any other columns necessary to define the specified instrument type will also be
 Additional columns will be processed, either as additional identifiers for recognized identifier names, or as custom fields.  See \code{\link{instrument}} for more information on custom fields.
 }
 \examples{
-load.instruments(system.file('data/currencies.csv.gz',package='FinancialInstrument'))
-load.instruments(system.file('data/root_contracts.csv.gz',package='FinancialInstrument'))
-load.instruments(system.file('data/future_series.csv.gz',package='FinancialInstrument'))
+example_ids <- c(
+  "FI_EXAMPLE_A",
+  "FI_EXAMPLE_B"
+)
+
+had_usd <- is.currency.name("USD")
+
+tryCatch(
+  {
+    if (!had_usd) {
+      currency("USD")
+    }
+
+    metadata <- data.frame(
+      primary_id = example_ids,
+      type = c("stock", "stock"),
+      currency = c("USD", "USD"),
+      description = c(
+        "Example instrument A",
+        "Example instrument B"
+      ),
+      stringsAsFactors = FALSE
+    )
+
+    load.instruments(metadata = metadata)
+
+    getInstrument("FI_EXAMPLE_A")
+    getInstrument("FI_EXAMPLE_B")
+  },
+  finally = {
+    rm_instruments(example_ids)
+
+    if (!had_usd) {
+      rm_currencies("USD")
+    }
+  }
+)
 
 }
 \seealso{
