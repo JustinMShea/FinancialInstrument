@@ -48,42 +48,41 @@ jobs:
         run: |
           install.packages(".", repos = NULL, type = "source")
 
-- name: Install blotter
-  if: matrix.package == 'blotter'
-  shell: Rscript {0}
-  env:
-    GITHUB_PAT: ""
-    GITHUB_TOKEN: ""
-  run: |
-    remotes::install_github(
-      "braverock/blotter",
-      dependencies = TRUE,
-      upgrade = "never",
-      auth_token = NULL
-    )
+      - name: Install blotter
+        if: matrix.package == 'blotter'
+        shell: Rscript {0}
+        env:
+          GITHUB_PAT: ""
+          GITHUB_TOKEN: ""
+        run: |
+          remotes::install_github(
+            "braverock/blotter",
+            dependencies = TRUE,
+            upgrade = "never",
+            auth_token = NULL
+          )
 
-- name: Install blotter and check quantstrat
-  if: matrix.package == 'quantstrat'
-  shell: Rscript {0}
-  env:
-    GITHUB_PAT: ""
-    GITHUB_TOKEN: ""
-  run: |
-    remotes::install_github(
-      "braverock/blotter",
-      dependencies = TRUE,
-      upgrade = "never",
-      auth_token = NULL
-    )
+      - name: Install blotter and check quantstrat
+        if: matrix.package == 'quantstrat'
+        shell: Rscript {0}
+        env:
+          GITHUB_PAT: ""
+          GITHUB_TOKEN: ""
+        run: |
+          remotes::install_github(
+            "braverock/blotter",
+            dependencies = TRUE,
+            upgrade = "never",
+            auth_token = NULL
+          )
 
-    quantstrat_source <- remotes::download_github(
-      "braverock/quantstrat",
-      auth_token = NULL
-    )
+          quantstrat_source <- remotes::download_github(
+            "braverock/quantstrat",
+            auth_token = NULL
+          )
 
-    rcmdcheck::rcmdcheck(
-      quantstrat_source,
-      args = "--no-manual",
-      error_on = "warning"
-    )
-
+          rcmdcheck::rcmdcheck(
+            quantstrat_source,
+            args = "--no-manual",
+            error_on = "warning"
+          )
