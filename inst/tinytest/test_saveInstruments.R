@@ -1,67 +1,168 @@
-# Regression tests for saveInstruments / loadInstruments / reloadInstruments
-# Covers: full-path save/load, RData and R/txt formats, dir argument, state restore.
-#
-# All test files are written directly into tempdir() (which always exists during
-# R CMD check) to avoid issues with creating subdirectories in constrained envs.
+# Regression tests for saveInstruments(), loadInstruments(),
+# and reloadInstruments().
 
-td <- tempdir()
-f_rdata  <- file.path(td, "fi_test_instr.RData")
-f_r      <- file.path(td, "fi_test_instr.R")
-f_reload <- file.path(td, "fi_test_reload.RData")
+original_names <- ls_instruments()
 
-# ---- helpers ---------------------------------------------------------------
-on.exit({
-    unlink(c(f_rdata, f_r, f_reload))
-    rm_instruments(keep.currencies = FALSE)
-}, add = TRUE)
+original_instruments <- if (length(original_names)) {
+  unname(lapply(original_names, getInstrument))
+} else {
+  list()
+}
 
-# ---- setup: define some instruments ----------------------------------------
-rm_instruments(keep.currencies = FALSE)
+f_rdata <- tempfile(
+  "fi_test_instr_",
+  fileext = ".RData"
+)
+
+f_r <- tempfile(
+  "fi_test_instr_",
+  fileext = ".R"
+)
+
+f_dir <- tempfile(
+  "fi_test_dir_",
+  fileext = ".RData"
+)
+
+f_reload <- tempfile(
+  "fi_test_reload_",
+  fileext = ".RData"
+)
+
+test_files <- c(
+  f_rdata,
+  f_r,
+  f_dir,
+  f_reload
+)
+
+on.exit(
+  {
+    unlink(test_files)
+
+    rm_instruments(
+      keep.currencies = FALSE
+    )
+
+    if (length(original_instruments)) {
+      loadInstruments(original_instruments)
+    }
+  },
+  add = TRUE
+)
+
+rm_instruments(
+  keep.currencies = FALSE
+)
+
 currency("USD")
-stock("SAVE_SPY", currency = "USD")
-stock("SAVE_DIA", currency = "USD")
 
-# ---- saveInstruments: full path, .RData ------------------------------------
+stock(
+  "SAVE_SPY",
+  currency = "USD",
+  multiplier = 1
+)
+
+stock(
+  "SAVE_DIA",
+  currency = "USD",
+  multiplier = 1
+)
+
+expected_spy <- getInstrument("SAVE_SPY")
+expected_dia <- getInstrument("SAVE_DIA")
+
+# RData round trip
 saveInstruments(f_rdata)
-expect_true(file.exists(f_rdata))
 
-# ---- loadInstruments: full path, .RData ------------------------------------
-rm_instruments(keep.currencies = FALSE)
-expect_false(is.instrument.name("SAVE_SPY"))
+expect_true(
+  file.exists(f_rdata)
+)
+
+rm_instruments(
+  keep.currencies = FALSE
+)
 
 loadInstruments(f_rdata)
-expect_true(is.instrument.name("SAVE_SPY"))
-expect_true(is.instrument.name("SAVE_DIA"))
 
-# ---- saveInstruments: full path, .R (text) ---------------------------------
-currency("USD")
-stock("SAVE_SPY", currency = "USD")
+expect_equal(
+  getInstrument("SAVE_SPY"),
+  expected_spy
+)
+
+expect_equal(
+  getInstrument("SAVE_DIA"),
+  expected_dia
+)
+
+# Generated R-file round trip
 saveInstruments(f_r)
-expect_true(file.exists(f_r))
 
-# ---- loadInstruments: full path, .R ----------------------------------------
-rm_instruments(keep.currencies = FALSE)
-expect_false(is.instrument.name("SAVE_SPY"))
+expect_true(
+  file.exists(f_r)
+)
 
-loadInstruments(f_r)
-expect_true(is.instrument.name("SAVE_SPY"))
+rm_instruments(
+  keep.currencies = FALSE
+)
 
-# ---- saveInstruments with dir argument --------------------------------------
+expect_silent(
+  loadInstruments(f_r)
+)
+
+expect_equal(
+  getInstrument("SAVE_SPY"),
+  expected_spy
+)
+
+expect_equal(
+  getInstrument("SAVE_DIA"),
+  expected_dia
+)
+
+# Separate filename and directory arguments
+saveInstruments(
+  basename(f_dir),
+  dir = dirname(f_dir)
+)
+
+expect_true(
+  file.exists(f_dir)
+)
+
+# reloadInstruments() should replace the registry
+rm_instruments(
+  keep.currencies = FALSE
+)
+
 currency("USD")
-stock("SAVE_SPY", currency = "USD")
-stock("SAVE_DIA", currency = "USD")
-saveInstruments("fi_test_dir.RData", dir = td)
-expect_true(file.exists(file.path(td, "fi_test_dir.RData")))
-unlink(file.path(td, "fi_test_dir.RData"))
 
-# ---- reloadInstruments replaces the registry --------------------------------
-currency("USD")
-stock(c("SAVE_AA", "SAVE_BB"), currency = "USD")
+stock(
+  c("SAVE_AA", "SAVE_BB"),
+  currency = "USD"
+)
+
 saveInstruments(f_reload)
 
-stock("SAVE_CC", currency = "USD")
-expect_true(is.instrument.name("SAVE_CC"))
+stock(
+  "SAVE_CC",
+  currency = "USD"
+)
+
+expect_true(
+  is.instrument.name("SAVE_CC")
+)
 
 reloadInstruments(f_reload)
-expect_false(is.instrument.name("SAVE_CC"))  # extra should be gone
-expect_true(is.instrument.name("SAVE_AA"))
+
+expect_false(
+  is.instrument.name("SAVE_CC")
+)
+
+expect_true(
+  is.instrument.name("SAVE_AA")
+)
+
+expect_true(
+  is.instrument.name("SAVE_BB")
+)
