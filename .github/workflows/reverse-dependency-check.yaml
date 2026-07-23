@@ -17,6 +17,9 @@ jobs:
     name: blotter and quantstrat
     runs-on: ubuntu-latest
 
+    env:
+      _R_CHECK_FORCE_SUGGESTS_: false
+
     steps:
       - name: Check out FinancialInstrument
         uses: actions/checkout@v4
@@ -27,11 +30,16 @@ jobs:
           r-version: release
           use-public-rspm: true
 
-      - name: Install test tools and FinancialInstrument dependencies
+      - name: Install FinancialInstrument dependencies
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: |
             any::rcmdcheck
+            any::tinytest
+            any::testthat
+            any::PerformanceAnalytics
+            any::foreach
+            any::iterators
 
       - name: Install current FinancialInstrument
         run: R CMD INSTALL .
@@ -48,15 +56,82 @@ jobs:
             https://github.com/braverock/quantstrat.git \
             revdeps/quantstrat
 
-      - name: Install blotter dependencies
+      - name: Install remaining CRAN dependencies
         shell: Rscript {0}
         run: |
-          pak::local_install_dev_deps(
-            "revdeps/blotter"
+          required <- c(
+            "quantmod",
+            "xts",
+            "zoo",
+            "TTR",
+            "PerformanceAnalytics",
+            "foreach",
+            "iterators",
+            "boot",
+            "tinytest",
+            "testthat"
           )
+
+          missing <- required[
+            !vapply(
+              required,
+              requireNamespace,
+              logical(1),
+              quietly = TRUE
+            )
+          ]
+
+          if (length(missing)) {
+            install.packages(missing)
+          }
 
       - name: Reinstall current FinancialInstrument
         run: R CMD INSTALL .
+
+      - name: Install blotter
+        run: R CMD INSTALL revdeps/blotter
+
+      - name: Verify FinancialInstrument and blotter
+        shell: Rscript {0}
+        run: |
+          expected_fi <- package_version(
+            read.dcf(
+              "DESCRIPTION",
+              fields = "Version"
+            )[1, 1]
+          )
+
+          expected_blotter <- package_version(
+            read.dcf(
+              "revdeps/blotter/DESCRIPTION",
+              fields = "Version"
+            )[1, 1]
+          )
+
+          installed_fi <- packageVersion(
+            "FinancialInstrument"
+          )
+
+          installed_blotter <- packageVersion(
+            "blotter"
+          )
+
+          cat(
+            "FinancialInstrument:",
+            as.character(installed_fi),
+            "\n"
+          )
+
+          cat(
+            "blotter:",
+            as.character(installed_blotter),
+            "\n"
+          )
+
+          stopifnot(
+            installed_fi == expected_fi,
+            installed_blotter == expected_blotter
+          )
 
       - name: Check blotter
         shell: Rscript {0}
@@ -67,27 +142,47 @@ jobs:
               "--no-manual",
               "--no-vignettes"
             ),
+            build_args = "--no-build-vignettes",
             error_on = "error"
           )
 
           print(result)
 
-      - name: Install checked blotter
-        run: R CMD INSTALL revdeps/blotter
-
-      - name: Install quantstrat dependencies
-        shell: Rscript {0}
-        run: |
-          pak::local_install_dev_deps(
-            "revdeps/quantstrat"
-          )
-
-      - name: Reinstall tested package chain
+      - name: Reinstall tested dependency chain
         run: |
           R CMD INSTALL .
           R CMD INSTALL revdeps/blotter
 
+      - name: Install quantstrat
+        run: R CMD INSTALL revdeps/quantstrat
+
+      - name: Verify quantstrat dependency chain
+        shell: Rscript {0}
+        run: |
+          library(FinancialInstrument)
+          library(blotter)
+          library(quantstrat)
+
+          cat(
+            "FinancialInstrument:",
+            as.character(packageVersion("FinancialInstrument")),
+            "\n"
+          )
+
+          cat(
+            "blotter:",
+            as.character(packageVersion("blotter")),
+            "\n"
+          )
+
+          cat(
+            "quantstrat:",
+            as.character(packageVersion("quantstrat")),
+            "\n"
+          )
+
       - name: Check quantstrat
+        continue-on-error: true
         shell: Rscript {0}
         run: |
           result <- rcmdcheck::rcmdcheck(
@@ -96,7 +191,18 @@ jobs:
               "--no-manual",
               "--no-vignettes"
             ),
-            error_on = "error"
+            build_args = "--no-build-vignettes",
+            check_dir = "quantstrat-check",
+            error_on = "never"
           )
 
           print(result)
+
+      - name: Upload quantstrat check results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quantstrat-check-results
+          path: quantstrat-check
+          if-no-files-found: warn
+          

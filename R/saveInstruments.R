@@ -171,7 +171,8 @@ loadInstruments <-function(file_name="MyInstruments", dir="") {
     } else "RData"
     file.name <- paste(dir, file_name, ".", extension, sep="")
     if (tolower(extension) %in% c("r", "txt")) {
-        if (substr(readLines(file.name, 1L), 1, 5) != "#auto") {
+        first_line <- tolower(readLines(file.name, 1L))
+        if (!startsWith(gsub("[[:space:]]", "", first_line), "#auto")) {
             warning(paste(file.name, "was not created by 'saveInstruments'"))
         }
         source(file.name)
