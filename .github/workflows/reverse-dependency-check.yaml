@@ -17,6 +17,9 @@ jobs:
     name: blotter and quantstrat
     runs-on: ubuntu-latest
 
+    env:
+      _R_CHECK_FORCE_SUGGESTS_: false
+
     steps:
       - name: Check out FinancialInstrument
         uses: actions/checkout@v4
@@ -32,6 +35,11 @@ jobs:
         with:
           extra-packages: |
             any::rcmdcheck
+            any::tinytest
+            any::testthat
+            any::PerformanceAnalytics
+            any::foreach
+            any::iterators
 
       - name: Install current FinancialInstrument
         run: R CMD INSTALL .
@@ -48,17 +56,69 @@ jobs:
             https://github.com/braverock/quantstrat.git \
             revdeps/quantstrat
 
-      - name: Install blotter dependencies
+      - name: Install remaining CRAN dependencies
         shell: Rscript {0}
         run: |
-          pak::local_install_dev_deps(
-            "revdeps/blotter",
-            upgrade = FALSE,
-            ask = FALSE
+          required <- c(
+            "quantmod",
+            "xts",
+            "zoo",
+            "TTR",
+            "PerformanceAnalytics",
+            "foreach",
+            "iterators",
+            "boot",
+            "tinytest",
+            "testthat"
           )
+
+          missing <- required[
+            !vapply(
+              required,
+              requireNamespace,
+              logical(1),
+              quietly = TRUE
+            )
+          ]
+
+          if (length(missing)) {
+            install.packages(missing)
+          }
 
       - name: Reinstall current FinancialInstrument
         run: R CMD INSTALL .
+
+      - name: Install blotter
+        run: R CMD INSTALL revdeps/blotter
+
+      - name: Verify FinancialInstrument and blotter
+        shell: Rscript {0}
+        run: |
+          expected_fi <- read.dcf(
+            "DESCRIPTION",
+            fields = "Version"
+          )[1, 1]
+
+          expected_blotter <- read.dcf(
+            "revdeps/blotter/DESCRIPTION",
+            fields = "Version"
+          )[1, 1]
+
+          installed_fi <- as.character(
+            packageVersion("FinancialInstrument")
+          )
+
+          installed_blotter <- as.character(
+            packageVersion("blotter")
+          )
+
+          cat("FinancialInstrument:", installed_fi, "\n")
+          cat("blotter:", installed_blotter, "\n")
+
+          stopifnot(
+            identical(installed_fi, expected_fi),
+            identical(installed_blotter, expected_blotter)
+          )
 
       - name: Check blotter
         shell: Rscript {0}
@@ -69,27 +129,44 @@ jobs:
               "--no-manual",
               "--no-vignettes"
             ),
+            build_args = "--no-build-vignettes",
             error_on = "error"
           )
 
           print(result)
 
-      - name: Install checked blotter
-        run: R CMD INSTALL revdeps/blotter
-
-      - name: Install quantstrat dependencies
-        shell: Rscript {0}
-        run: |
-          pak::local_install_dev_deps(
-            "revdeps/quantstrat",
-            upgrade = FALSE,
-            ask = FALSE
-          )
-
       - name: Reinstall tested dependency chain
         run: |
           R CMD INSTALL .
           R CMD INSTALL revdeps/blotter
+
+      - name: Install quantstrat
+        run: R CMD INSTALL revdeps/quantstrat
+
+      - name: Verify quantstrat dependency chain
+        shell: Rscript {0}
+        run: |
+          library(FinancialInstrument)
+          library(blotter)
+          library(quantstrat)
+
+          cat(
+            "FinancialInstrument:",
+            as.character(packageVersion("FinancialInstrument")),
+            "\n"
+          )
+
+          cat(
+            "blotter:",
+            as.character(packageVersion("blotter")),
+            "\n"
+          )
+
+          cat(
+            "quantstrat:",
+            as.character(packageVersion("quantstrat")),
+            "\n"
+          )
 
       - name: Check quantstrat
         shell: Rscript {0}
@@ -100,6 +177,7 @@ jobs:
               "--no-manual",
               "--no-vignettes"
             ),
+            build_args = "--no-build-vignettes",
             error_on = "error"
           )
 
