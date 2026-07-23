@@ -33,7 +33,6 @@ jobs:
           extra-packages: |
             any::rcmdcheck
             any::pak
-            any::remotes
 
       - name: Install current FinancialInstrument
         run: R CMD INSTALL .
@@ -80,11 +79,15 @@ jobs:
       - name: Install quantstrat core dependencies
         shell: Rscript {0}
         run: |
-          remotes::install_deps(
-            "revdeps/quantstrat",
-            dependencies = c("Depends", "Imports", "LinkingTo"),
-            upgrade = "never"
-          )
+          pak::pkg_install(c(
+            "quantmod",
+            "xts",
+            "foreach",
+            "iterators",
+            "zoo",
+            "TTR",
+            "MASS"
+          ))
 
       - name: Reinstall tested package chain
         run: |
