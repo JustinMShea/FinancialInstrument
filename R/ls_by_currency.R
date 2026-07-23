@@ -23,6 +23,10 @@
 #' @param match Logical. Should `pattern` be matched exactly?
 #' @param show.currencies Logical. Should currency instruments themselves be
 #'   included in the returned names?
+#' @param x Character vector of instrument names to remove. If missing, all
+#'   instruments denominated in `currency` are selected.
+#' @param keep.currencies Logical. If `TRUE`, retain the currency instruments
+#'   themselves.
 #'
 #' @return A character vector containing instrument names denominated in the
 #'   requested currencies, or `NULL` when no matching instruments are found.
@@ -55,6 +59,9 @@
 #'     ls_by_currency("GBP")
 #'     ls_USD()
 #'     ls_CAD()
+#'
+#'     rm_by_currency(currency = "CAD")
+#'
 #'   },
 #'   finally = {
 #'     if (file.exists(backup_path)) {
@@ -131,7 +138,30 @@ ls_by_currency <- function(
     NULL
   }
 }
+#' @export
+#' @rdname ls_by_currency
+rm_by_currency <- function(
+    x,
+    currency,
+    keep.currencies = TRUE
+) {
+  show_currencies <- !keep.currencies
 
+  if (missing(x)) {
+    x <- ls_by_currency(
+      currency = currency,
+      show.currencies = show_currencies
+    )
+  } else {
+    x <- ls_by_currency(
+      currency = currency,
+      pattern = x,
+      show.currencies = show_currencies
+    )
+  }
+
+  rm(list = x, pos = .instrument)
+}
 #AUD GBP CAD EUR JPY CHF HKD SEK NZD
 #' @export
 #' @rdname ls_by_currency
