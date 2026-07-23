@@ -1,15 +1,19 @@
 # Regression tests for saveInstruments / loadInstruments / reloadInstruments
-# Covers: explicit output paths, RData and R/txt formats, state restore.
+# Covers: full-path save/load, RData and R/txt formats, dir argument, state restore.
+#
+# All test files are written directly into tempdir() (which always exists during
+# R CMD check) to avoid issues with creating subdirectories in constrained envs.
 
-test_dir <- tempfile("fi-test-save-")
-dir.create(test_dir, recursive = TRUE, showWarnings = FALSE)
+td <- tempdir()
+f_rdata  <- file.path(td, "fi_test_instr.RData")
+f_r      <- file.path(td, "fi_test_instr.R")
+f_reload <- file.path(td, "fi_test_reload.RData")
 
 # ---- helpers ---------------------------------------------------------------
-cleanup <- function() {
-    unlink(test_dir, recursive = TRUE)
+on.exit({
+    unlink(c(f_rdata, f_r, f_reload))
     rm_instruments(keep.currencies = FALSE)
-}
-on.exit(cleanup(), add = TRUE)
+}, add = TRUE)
 
 # ---- setup: define some instruments ----------------------------------------
 rm_instruments(keep.currencies = FALSE)
@@ -17,50 +21,47 @@ currency("USD")
 stock("SAVE_SPY", currency = "USD")
 stock("SAVE_DIA", currency = "USD")
 
-# ---- saveInstruments writes an RData file to explicit dir ------------------
-saveInstruments("test.RData", dir = test_dir)
-expect_true(file.exists(file.path(test_dir, "test.RData")))
+# ---- saveInstruments: full path, .RData ------------------------------------
+saveInstruments(f_rdata)
+expect_true(file.exists(f_rdata))
 
-# ---- loadInstruments restores instruments from explicit path ---------------
+# ---- loadInstruments: full path, .RData ------------------------------------
 rm_instruments(keep.currencies = FALSE)
 expect_false(is.instrument.name("SAVE_SPY"))
 
-loadInstruments("test.RData", dir = test_dir)
+loadInstruments(f_rdata)
 expect_true(is.instrument.name("SAVE_SPY"))
 expect_true(is.instrument.name("SAVE_DIA"))
 
-# ---- saveInstruments writes an .R (text) file to explicit dir --------------
+# ---- saveInstruments: full path, .R (text) ---------------------------------
 currency("USD")
 stock("SAVE_SPY", currency = "USD")
-saveInstruments("test.R", dir = test_dir)
-expect_true(file.exists(file.path(test_dir, "test.R")))
+saveInstruments(f_r)
+expect_true(file.exists(f_r))
 
-# ---- loadInstruments reads the .R file from explicit path ------------------
+# ---- loadInstruments: full path, .R ----------------------------------------
 rm_instruments(keep.currencies = FALSE)
 expect_false(is.instrument.name("SAVE_SPY"))
 
-loadInstruments("test.R", dir = test_dir)
+loadInstruments(f_r)
 expect_true(is.instrument.name("SAVE_SPY"))
+
+# ---- saveInstruments with dir argument --------------------------------------
+currency("USD")
+stock("SAVE_SPY", currency = "USD")
+stock("SAVE_DIA", currency = "USD")
+saveInstruments("fi_test_dir.RData", dir = td)
+expect_true(file.exists(file.path(td, "fi_test_dir.RData")))
+unlink(file.path(td, "fi_test_dir.RData"))
 
 # ---- reloadInstruments replaces the registry --------------------------------
 currency("USD")
 stock(c("SAVE_AA", "SAVE_BB"), currency = "USD")
-saveInstruments("reload.RData", dir = test_dir)
+saveInstruments(f_reload)
 
-stock("SAVE_CC", currency = "USD")   # add extra instrument
+stock("SAVE_CC", currency = "USD")
 expect_true(is.instrument.name("SAVE_CC"))
 
-reloadInstruments("reload.RData", dir = test_dir)
+reloadInstruments(f_reload)
 expect_false(is.instrument.name("SAVE_CC"))  # extra should be gone
 expect_true(is.instrument.name("SAVE_AA"))
-
-# ---- file_name with full path (no dir argument) ----------------------------
-full_path <- tempfile(tmpdir = test_dir, fileext = ".RData")
-currency("USD")
-stock("SAVE_SPY", currency = "USD")
-saveInstruments(full_path)
-expect_true(file.exists(full_path))
-
-rm_instruments(keep.currencies = FALSE)
-loadInstruments(full_path)
-expect_true(is.instrument.name("SAVE_SPY"))
