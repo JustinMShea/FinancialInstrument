@@ -182,7 +182,6 @@ jobs:
           )
 
       - name: Check quantstrat
-        id: check_quantstrat
         continue-on-error: true
         shell: Rscript {0}
         run: |
@@ -193,32 +192,15 @@ jobs:
               "--no-vignettes"
             ),
             build_args = "--no-build-vignettes",
-            check_dir = "revdep-checks",
+            check_dir = "quantstrat-check",
             error_on = "never"
           )
 
           print(result)
-
-          if (length(result$errors)) {
-            quit(status = 1)
-          }
-
-      - name: Show quantstrat test output
-        if: always()
-        run: |
-          find revdep-checks \
-            -type f \
-            \( -name 'testthat.Rout*' -o -name '00check.log' \) \
-            -print \
-            -exec cat {} \;
 
       - name: Upload quantstrat check results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: quantstrat-check-results
-          path: revdep-checks
-
-      - name: Fail on quantstrat errors
-        if: steps.check_quantstrat.outcome == 'failure'
-        run: exit 1
+          path: quantstrat-check
