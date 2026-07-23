@@ -21,24 +21,11 @@ called for side-effect.
 Currently, this only updates ETFs.  It will add \dQuote{msName} and
 \dQuote{msCategory} attributes to the instruments. (ms for morningstar)
 }
-\examples{
-\dontrun{
-## backup .instrument environment
-ibak <- as.list(FinancialInstrument:::.instrument) 
-rm_instruments()
-stock(s <- c("SPY", "USO", "LQD"), currency("USD"))
-update_instruments.morningstar(s)
-instrument.table(s)
-## cleanup and restore instrument environment
-rm_instruments(keep.currencies=FALSE)
-loadInstruments(ibak)
-}
-}
 \references{
 \url{http://www.morningstar.com}
 }
 \seealso{
-\code{\link{update_instruments.yahoo}}, 
+\code{\link{update_instruments.yahoo}},
 \code{\link{update_instruments.TTR}}
 \code{\link{update_instruments.iShares}}
 }
