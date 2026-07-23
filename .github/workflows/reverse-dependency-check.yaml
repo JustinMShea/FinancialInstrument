@@ -1,0 +1,90 @@
+name: Reverse dependency checks
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - master
+      - "cran/**"
+
+permissions:
+  contents: read
+
+jobs:
+  reverse-dependencies:
+    name: ${{ matrix.package }} / R ${{ matrix.r-version }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        r-version:
+          - release
+        package:
+          - blotter
+          - quantstrat
+
+    steps:
+      - name: Check out FinancialInstrument
+        uses: actions/checkout@v4
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ matrix.r-version }}
+          use-public-rspm: true
+
+      - name: Install system and R dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: |
+            any::remotes
+            any::rcmdcheck
+          needs: check
+
+      - name: Install current FinancialInstrument
+        shell: Rscript {0}
+        run: |
+          install.packages(".", repos = NULL, type = "source")
+
+      - name: Install blotter
+        if: matrix.package == 'blotter'
+        shell: Rscript {0}
+        run: |
+          remotes::install_github(
+            "braverock/blotter",
+            dependencies = TRUE,
+            upgrade = "never"
+          )
+
+      - name: Check blotter
+        if: matrix.package == 'blotter'
+        shell: Rscript {0}
+        run: |
+          remotes::install_github(
+            "braverock/blotter",
+            dependencies = TRUE,
+            upgrade = "never"
+          )
+          rcmdcheck::rcmdcheck(
+            remotes::download_github("braverock/blotter"),
+            args = "--no-manual",
+            error_on = "warning"
+          )
+
+      - name: Install blotter and check quantstrat
+        if: matrix.package == 'quantstrat'
+        shell: Rscript {0}
+        run: |
+          remotes::install_github(
+            "braverock/blotter",
+            dependencies = TRUE,
+            upgrade = "never"
+          )
+
+          rcmdcheck::rcmdcheck(
+            remotes::download_github("braverock/quantstrat"),
+            args = "--no-manual",
+            error_on = "warning"
+          )
