@@ -2,28 +2,20 @@ name: Reverse dependency checks
 
 on:
   workflow_dispatch:
-  pull_request:
   push:
-    branches:
-      - master
-      - "cran/**"
+  pull_request:
 
 permissions:
   contents: read
 
+concurrency:
+  group: reverse-deps-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   reverse-dependencies:
-    name: ${{ matrix.package }} / R ${{ matrix.r-version }}
+    name: blotter and quantstrat
     runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
-      matrix:
-        r-version:
-          - release
-        package:
-          - blotter
-          - quantstrat
 
     steps:
       - name: Check out FinancialInstrument
@@ -32,57 +24,81 @@ jobs:
       - name: Set up R
         uses: r-lib/actions/setup-r@v2
         with:
-          r-version: ${{ matrix.r-version }}
+          r-version: release
           use-public-rspm: true
 
-      - name: Install system and R dependencies
+      - name: Install test tools and FinancialInstrument dependencies
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
+          dependencies: all
           extra-packages: |
-            any::remotes
+            any::pak
             any::rcmdcheck
-          needs: check
 
       - name: Install current FinancialInstrument
+        run: R CMD INSTALL .
+
+      - name: Clone downstream packages
+        run: |
+          mkdir -p revdeps
+
+          git clone --depth 1 \
+            https://github.com/braverock/blotter.git \
+            revdeps/blotter
+
+          git clone --depth 1 \
+            https://github.com/braverock/quantstrat.git \
+            revdeps/quantstrat
+
+      - name: Install blotter dependencies
         shell: Rscript {0}
         run: |
-          install.packages(".", repos = NULL, type = "source")
+          pak::local_install_dev_deps(
+            "revdeps/blotter"
+          )
 
-      - name: Install blotter
-        if: matrix.package == 'blotter'
+      - name: Reinstall current FinancialInstrument
+        run: R CMD INSTALL .
+
+      - name: Check blotter
         shell: Rscript {0}
-        env:
-          GITHUB_PAT: ""
-          GITHUB_TOKEN: ""
         run: |
-          remotes::install_github(
-            "braverock/blotter",
-            dependencies = TRUE,
-            upgrade = "never",
-            auth_token = NULL
+          result <- rcmdcheck::rcmdcheck(
+            "revdeps/blotter",
+            args = c(
+              "--no-manual",
+              "--no-vignettes"
+            ),
+            error_on = "error"
           )
 
-      - name: Install blotter and check quantstrat
-        if: matrix.package == 'quantstrat'
+          print(result)
+
+      - name: Install checked blotter
+        run: R CMD INSTALL revdeps/blotter
+
+      - name: Install quantstrat dependencies
         shell: Rscript {0}
-        env:
-          GITHUB_PAT: ""
-          GITHUB_TOKEN: ""
         run: |
-          remotes::install_github(
-            "braverock/blotter",
-            dependencies = TRUE,
-            upgrade = "never",
-            auth_token = NULL
+          pak::local_install_dev_deps(
+            "revdeps/quantstrat"
           )
 
-          quantstrat_source <- remotes::download_github(
-            "braverock/quantstrat",
-            auth_token = NULL
+      - name: Reinstall tested package chain
+        run: |
+          R CMD INSTALL .
+          R CMD INSTALL revdeps/blotter
+
+      - name: Check quantstrat
+        shell: Rscript {0}
+        run: |
+          result <- rcmdcheck::rcmdcheck(
+            "revdeps/quantstrat",
+            args = c(
+              "--no-manual",
+              "--no-vignettes"
+            ),
+            error_on = "error"
           )
 
-          rcmdcheck::rcmdcheck(
-            quantstrat_source,
-            args = "--no-manual",
-            error_on = "warning"
-          )
+          print(result)
