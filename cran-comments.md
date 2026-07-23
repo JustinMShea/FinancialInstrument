@@ -9,21 +9,37 @@
 
 ## Submission Notes
 
-This is a resubmission of the previously archived package **FinancialInstrument**. The issues that led to archival have been addressed.
+This is a resubmission of version 1.4.1, addressing the CRAN reviewer feedback
+received after the 1.4.0 submission.
 
-Ross Bennett, the previous CRAN maintainer, has agreed to the maintainer transition and has sent confirmation directly to CRAN.
+### Changes addressing CRAN reviewer feedback
 
-The following changes were made for this release:
+* **Return-value documentation:** Added `\value` sections to all exported
+  functions that were previously missing them, describing the return class,
+  structure, and side-effects.
 
-* Justin M. Shea is now the package maintainer, and the `DESCRIPTION` file has been updated accordingly.
-* Updated legacy roxygen2 documentation blocks across multiple source files (`instrument.R`, `ls_by_currency.R`, `ls_instruments.R`, and `FinancialInstrument-package.R`) to comply with current roxygen2 parsing requirements, including `@aliases` and `@importFrom` directives.
-* Corrected S3 generic/method registration for `expires.spread`.
-* Added the appropriate package-qualified Rd cross-reference for `quantmod::setSymbolLookup`.
-* Added `Encoding: UTF-8` to the package metadata.
-* Removed hyperlinks to Yahoo Finance from the documentation because Yahoo returns HTTP 429 responses during automated URL checks.
+* **Examples — file paths:** All examples that previously wrote to the current
+  working directory now use `tempdir()` / `tempfile()` and clean up with
+  `tryCatch(finally = ...)`.
 
-Additional improvements made during the update include:
+* **Examples — `FinancialInstrument:::.instrument`:** Removed all `:::` access
+  to the internal registry from documentation examples. Backup/restore patterns
+  now use the exported `saveInstruments()` / `reloadInstruments()` API.
 
-* Migrated the testing framework from `testthat` to `tinytest`.
-* Expanded test coverage for frequency-mixed `xts` time-series alignment.
-* Added a `README.md` and GitHub Actions continuous integration workflows for automated package checks.
+* **Examples — unmatched parenthesis:** Fixed the unmatched parenthesis in the
+  `ls_by_currency()` example.
+
+* **Examples — commented-out executable code:** Removed commented-out
+  executable alternatives from all examples.
+
+* **`\dontrun{}` vs `\donttest{}`:** Converted examples that can be run in a
+  standard R session from `\dontrun{}` to either runnable or `\donttest{}`
+  blocks. `\dontrun{}` is now reserved for genuinely unrunnable code.
+
+* **Console output (`alltick2sec`):** Added `verbose = FALSE` at the end of
+  the `alltick2sec()` signature. The previously unconditional `cat()` progress
+  message is now suppressed by default and uses `message()` when enabled,
+  preserving all existing return values.
+
+### There is no associated publication; no DOI or ISBN applies.
+

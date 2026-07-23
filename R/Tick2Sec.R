@@ -46,6 +46,8 @@
 #' @param Symbols String names of instruments to convert
 #' @param overwrite TRUE/FALSE. If file already exists in savedir, should it be 
 #'   overwritten?
+#' @param verbose logical. If \code{TRUE}, print progress messages. Default is
+#'   \code{FALSE}.
 #' @return \code{to_secBATV} returns an xts object of one second frequency.
 #'   \code{alltick2sec} returns a list of files that were converted.
 #' @author gsee
@@ -100,7 +102,8 @@ to_secBATV <- function(x) {
 alltick2sec <- function(getdir = '~/TRTH/tick/', 
                         savedir = '~/TRTH/sec/', 
                         Symbols=list.files(getdir),
-                        overwrite = FALSE) {
+                        overwrite = FALSE,
+                        verbose = FALSE) {
     if (!file.exists(savedir)) stop(paste("Please create savedir (", savedir, ") first", sep=""))
     if(!requireNamespace("foreach", quietly=TRUE))
         stop("package:",dQuote("foreach"),"cannot be loaded.")
@@ -110,7 +113,7 @@ alltick2sec <- function(getdir = '~/TRTH/tick/',
     s=NULL    
     `%dopar%` <- foreach::`%dopar%`
     foreach::foreach(s = Symbols) %dopar% {
-        cat("converting ", s, ' ...\n')
+        if (verbose) message("converting ", s)
         gdir <- paste(getdir, s, sep=gsep)
         if (file.exists(gdir)) {
             sdir <- paste(savedir, s, sep=ssep) 

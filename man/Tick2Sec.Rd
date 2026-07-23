@@ -11,7 +11,8 @@ alltick2sec(
   getdir = "~/TRTH/tick/",
   savedir = "~/TRTH/sec/",
   Symbols = list.files(getdir),
-  overwrite = FALSE
+  overwrite = FALSE,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -25,6 +26,9 @@ alltick2sec(
 
 \item{overwrite}{TRUE/FALSE. If file already exists in savedir, should it be 
 overwritten?}
+
+\item{verbose}{logical. If \code{TRUE}, print progress messages. Default is
+\code{FALSE}.}
 }
 \value{
 \code{to_secBATV} returns an xts object of one second frequency.
