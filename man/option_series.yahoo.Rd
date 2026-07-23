@@ -52,10 +52,11 @@ Has only been tested with stock options.
 The options' currency should be the same as the underlying's.
 }
 \examples{
+\donttest{
 option_series.yahoo('SPY') #only nearby calls and puts
 option_series.yahoo('DIA', Exp=NULL) #all chains
 ls_instruments()
-
+}
 }
 \references{
 Yahoo Finance at "finance.yahoo.com"

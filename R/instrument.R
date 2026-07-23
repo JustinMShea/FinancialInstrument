@@ -720,10 +720,11 @@ option_series <- function(primary_id , root_id = NULL, suffix_id = NULL,
 #' @seealso \code{\link{option_series}}, \code{\link{option}},
 #'   \code{\link{instrument}}, \code{\link[quantmod]{getOptionChain}}
 #' @examples
+#' \donttest{
 #' option_series.yahoo('SPY') #only nearby calls and puts
 #' option_series.yahoo('DIA', Exp=NULL) #all chains
 #' ls_instruments()
-#'
+#'}
 #' @export
 option_series.yahoo <- function(symbol, Exp, currency="USD", multiplier=100,
                                 first_traded=NULL, tick_size=NULL, overwrite=TRUE) {
