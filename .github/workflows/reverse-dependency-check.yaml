@@ -32,6 +32,7 @@ jobs:
         with:
           extra-packages: |
             any::rcmdcheck
+            any::pak
             any::remotes
 
       - name: Install current FinancialInstrument
@@ -76,7 +77,7 @@ jobs:
       - name: Install checked blotter
         run: R CMD INSTALL revdeps/blotter
 
-      - name: Install quantstrat dependencies
+      - name: Install quantstrat core dependencies
         shell: Rscript {0}
         run: |
           remotes::install_deps(
