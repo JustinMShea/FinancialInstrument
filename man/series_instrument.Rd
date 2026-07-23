@@ -77,6 +77,14 @@ stored for this instrument.}
 
 \item{payment_schedule}{Not currently being implemented}
 }
+\value{
+For `future_series()` and `option_series()`, a character vector of
+  assigned `primary_id` values when `assign_i = TRUE`, or an instrument
+  object for scalar input and a list of instrument objects for vectorized
+  input when `assign_i = FALSE`. `bond_series()` returns the result of
+  creating or updating the bond-series instrument; this is normally the
+  assigned identifier for a newly created series.
+}
 \description{
 Constructors for series contracts on instruments such as options and futures
 }
@@ -97,7 +105,6 @@ updated recently and may not support all the features supported for
 \code{option_series} and \code{future_series}.  Patches welcome.
 }
 \examples{
-\dontrun{
 currency("USD")
 future("ES","USD",multiplier=50, tick_size=0.25)
 future_series('ES_U1')
@@ -112,5 +119,5 @@ option_series(root_id='.SPY',suffix_id='111119C130')
 #multiple series instruments at once.
 future_series(c("ES_H12","ES_M12"))
 option_series(c("SPY_110917C115","SPY_110917P115"))
-}
+
 }

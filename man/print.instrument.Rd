@@ -6,6 +6,9 @@
 \usage{
 \method{print}{instrument}(x, ...)
 }
+\value{
+The instrument object `x`, invisibly.
+}
 \description{
 instrument class print method
 }

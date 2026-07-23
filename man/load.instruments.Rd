@@ -2,7 +2,7 @@
 % Please edit documentation in R/load.instruments.R
 \name{load.instruments}
 \alias{load.instruments}
-\title{load instrument metadata into the .instrument environment}
+\title{Load instrument metadata into the .instrument environment}
 \usage{
 load.instruments(
   file = NULL,
@@ -29,6 +29,10 @@ load.instruments(
 
 \item{overwrite}{TRUE/FALSE. See \code{\link{instrument}}.}
 }
+\value{
+`NULL` invisibly. Called for the side effect of creating instrument
+  definitions in the package instrument registry.
+}
 \description{
 This function will load instrument metadata (data about the data)
 either from a file specified by the \code{file} argument or
@@ -47,22 +51,20 @@ Use the \code{identifier_cols} argument to specify which fields (if any) in the 
 
 Typically, columns will exist for \code{multiplier} and \code{tick_size}.
 
-Any other columns necessary to define the specified instrument type will also be required to avoid fatal Errors.  
+Any other columns necessary to define the specified instrument type will also be required to avoid fatal Errors.
 
 Additional columns will be processed, either as additional identifiers for recognized identifier names, or as custom fields.  See \code{\link{instrument}} for more information on custom fields.
 }
 \examples{
-\dontrun{
 load.instruments(system.file('data/currencies.csv.gz',package='FinancialInstrument'))
 load.instruments(system.file('data/root_contracts.csv.gz',package='FinancialInstrument'))
 load.instruments(system.file('data/future_series.csv.gz',package='FinancialInstrument'))
 
 }
-}
 \seealso{
 \code{\link{loadInstruments}},
-\code{\link{instrument}}, 
-\code{\link{setSymbolLookup.FI}}, 
-\code{\link[quantmod]{getSymbols}}, 
+\code{\link{instrument}},
+\code{\link{setSymbolLookup.FI}},
+\code{\link[quantmod]{getSymbols}},
 \code{\link{getSymbols.FI}}
 }

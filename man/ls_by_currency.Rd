@@ -64,26 +64,24 @@ ls_ functions get names of instruments denominated in a given currency (or
 currencies) rm_ functions remove instruments of a given currency
 }
 \examples{
+backup_file <- tempfile(fileext = ".RData")
+saveInstruments(backup_file)
 
-\dontrun{
-#First create instruments
-currency(c('USD','CAD','GBP')
-stock(c('CM','CNQ'),'CAD')
-stock(c('BET','BARC'),'GBP')
-stock(c('SPY','DIA'),'USD')
+rm_instruments(keep.currencies = FALSE)
+currency(c("USD", "CAD", "GBP"))
+stock(c("CM", "CNQ"), "CAD")
+stock(c("BARC", "BET"), "GBP")
+stock(c("DIA", "SPY"), "USD")
 
-#now the examples
-ls_by_currency(c('CAD','GBP'))
-
+ls_by_currency(c("CAD", "GBP"))
 ls_USD()
 ls_CAD()
 
-#2 ways to remove all instruments of a currency
-rm_instruments(ls_USD())
-#rm_instruments(ls_GBP(),keep.currencies=FALSE)
-rm_by_currency( ,'CAD')
-#rm_by_currency( ,'CAD', keep.currencies=FALSE)
-}
+rm_by_currency(currency = "CAD")
+
+reloadInstruments(backup_file)
+unlink(backup_file)
+
 }
 \seealso{
 ls_instruments, ls_currencies, rm_instruments, rm_currencies,

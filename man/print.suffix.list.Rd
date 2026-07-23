@@ -6,6 +6,9 @@
 \usage{
 \method{print}{suffix.list}(x, ...)
 }
+\value{
+The `suffix.list` object `x`, invisibly.
+}
 \description{
 suffix.list class print method
 }

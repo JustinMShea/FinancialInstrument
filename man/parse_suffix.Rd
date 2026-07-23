@@ -12,8 +12,8 @@ parse_suffix(x, silent = TRUE)
 \item{silent}{silence warnings? (warning will usually be about inferring a 4 digit year from a 1 or 2 digit year)}
 }
 \value{
-an object of class \sQuote{suffix.list} which is a list containing \sQuote{type} of instrument, 
-\sQuote{month} of expiration, \sQuote{year} of expiration, \sQuote{strike} price of option, 
+an object of class \sQuote{suffix.list} which is a list containing \sQuote{type} of instrument,
+\sQuote{month} of expiration, \sQuote{year} of expiration, \sQuote{strike} price of option,
 \sQuote{right} of option (\dQuote{C} or \dQuote{P}), \sQuote{cm} (maturity in days of a constant maturity contract),
 \sQuote{cc} (method for calculating a continuous contract), \sQuote{format} (string that indicates the format of the unparsed id).
 }
@@ -21,7 +21,7 @@ an object of class \sQuote{suffix.list} which is a list containing \sQuote{type}
 extract information from the suffix_id of an instrument
 }
 \details{
-These would be recognized as a Sep 2011 outright futures contract: 
+These would be recognized as a Sep 2011 outright futures contract:
 U1, U11, SEP1, SEP11, U2011, Sep2011, SEP2011
 
 These would be recognized as a call with a strike of 122.5 that expires Sep 17, 2011:
@@ -38,7 +38,7 @@ cc.Exp.1 (continuous contract rolled 1 day before Expiration)
 
 Synthetics and spreads:
 
-SPY.DIA --> type == synthetic; 
+SPY.DIA --> type == synthetic;
 
 U1.Z1 or U11.Z11 --> type == "calendar", "spread"; month == 'SEP', year == 2011
 

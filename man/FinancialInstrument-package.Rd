@@ -107,7 +107,8 @@ particular instrument from the environment.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/braverock/FinancialInstrument}
+  \item \url{https://github.com/JustinMShea/FinancialInstrument}
+  \item Report bugs at \url{https://github.com/JustinMShea/FinancialInstrument/issues}
 }
 
 }

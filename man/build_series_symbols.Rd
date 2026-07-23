@@ -2,7 +2,7 @@
 % Please edit documentation in R/build_symbols.R
 \name{build_series_symbols}
 \alias{build_series_symbols}
-\title{construct a series of symbols based on root symbol and suffix letters}
+\title{Construct a series of symbols based on root symbol and suffix letters}
 \usage{
 build_series_symbols(roots, yearlist = c(0, 1))
 }
@@ -10,6 +10,11 @@ build_series_symbols(roots, yearlist = c(0, 1))
 \item{roots}{data.frame containing at least columns \code{primary_id} and \code{month_cycle}, see Details}
 
 \item{yearlist}{vector of year suffixes to be applied, see Details}
+}
+\value{
+A character vector containing the constructed series identifiers.
+  Each identifier combines a root contract identifier, a contract-month
+  code, and a year suffix.
 }
 \description{
 The columns needed by this version of the function are \code{primary_id}

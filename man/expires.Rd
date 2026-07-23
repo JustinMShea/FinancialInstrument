@@ -2,7 +2,7 @@
 % Please edit documentation in R/expires.R
 \name{expires}
 \alias{expires}
-\title{extract the correct expires value from an \code{instrument}}
+\title{Extract the correct expires value from an \code{instrument}}
 \usage{
 expires(x, ...)
 }
@@ -34,7 +34,6 @@ indicated by their suffix_id and most energy products expire in the month
 prior to their suffix_id month.
 }
 \examples{
-\dontrun{
 instr <- instrument("FOO_U1", currency=currency("USD"), multiplier=1,
                     expires=c("2001-09-01", "2011-09-01", "2021-09-01"),
                     assign_i=FALSE)
@@ -53,7 +52,7 @@ instrument("FOO_U1", currency=currency("USD"), multiplier=1,
            expires=c("2001-09-01", "2011-09-01", "2021-09-01"),
            assign_i=TRUE)
 expires("FOO_U1")
-}
+
 }
 \seealso{
 \code{\link{expires.instrument}}, \code{\link{expires.character}},
