@@ -1,0 +1,105 @@
+name: Reverse dependency checks
+
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: reverse-deps-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  reverse-dependencies:
+    name: blotter and quantstrat
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out FinancialInstrument
+        uses: actions/checkout@v4
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: release
+          use-public-rspm: true
+
+      - name: Install test tools and FinancialInstrument dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: |
+            any::rcmdcheck
+            any::remotes
+
+      - name: Install current FinancialInstrument
+        run: R CMD INSTALL .
+
+      - name: Clone downstream packages
+        run: |
+          mkdir -p revdeps
+
+          git clone --depth 1 \
+            https://github.com/braverock/blotter.git \
+            revdeps/blotter
+
+          git clone --depth 1 \
+            https://github.com/braverock/quantstrat.git \
+            revdeps/quantstrat
+
+      - name: Install blotter dependencies
+        shell: Rscript {0}
+        run: |
+          pak::local_install_dev_deps(
+            "revdeps/blotter"
+          )
+
+      - name: Reinstall current FinancialInstrument
+        run: R CMD INSTALL .
+
+      - name: Check blotter
+        shell: Rscript {0}
+        run: |
+          result <- rcmdcheck::rcmdcheck(
+            "revdeps/blotter",
+            args = c(
+              "--no-manual",
+              "--no-vignettes"
+            ),
+            error_on = "error"
+          )
+
+          print(result)
+
+      - name: Install checked blotter
+        run: R CMD INSTALL revdeps/blotter
+
+      - name: Install quantstrat dependencies
+        shell: Rscript {0}
+        run: |
+          remotes::install_deps(
+            "revdeps/quantstrat",
+            dependencies = c("Depends", "Imports", "LinkingTo"),
+            upgrade = "never"
+          )
+
+      - name: Reinstall tested package chain
+        run: |
+          R CMD INSTALL .
+          R CMD INSTALL revdeps/blotter
+
+      - name: Check quantstrat
+        shell: Rscript {0}
+        run: |
+          result <- rcmdcheck::rcmdcheck(
+            "revdeps/quantstrat",
+            args = c(
+              "--no-manual",
+              "--no-vignettes"
+            ),
+            error_on = "error"
+          )
+
+          print(result)
