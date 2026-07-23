@@ -204,3 +204,5 @@ jobs:
         with:
           name: quantstrat-check-results
           path: quantstrat-check
+          if-no-files-found: warn
+          
