@@ -2,6 +2,7 @@
 % Please edit documentation in R/ls_by_currency.R
 \name{ls_by_currency}
 \alias{ls_by_currency}
+\alias{rm_by_currency}
 \alias{ls_USD}
 \alias{ls_AUD}
 \alias{ls_GBP}
@@ -15,6 +16,8 @@
 \title{List instruments by currency denomination}
 \usage{
 ls_by_currency(currency, pattern = NULL, match = TRUE, show.currencies = FALSE)
+
+rm_by_currency(x, currency, keep.currencies = TRUE)
 
 ls_USD(pattern = NULL, match = TRUE, show.currencies = FALSE)
 
@@ -46,6 +49,12 @@ matching `pattern` are returned.}
 
 \item{show.currencies}{Logical. Should currency instruments themselves be
 included in the returned names?}
+
+\item{x}{Character vector of instrument names to remove. If missing, all
+instruments denominated in `currency` are selected.}
+
+\item{keep.currencies}{Logical. If `TRUE`, retain the currency instruments
+themselves.}
 }
 \value{
 A character vector containing instrument names denominated in the
@@ -77,6 +86,9 @@ tryCatch(
     ls_by_currency("GBP")
     ls_USD()
     ls_CAD()
+
+    rm_by_currency(currency = "CAD")
+
   },
   finally = {
     if (file.exists(backup_path)) {
