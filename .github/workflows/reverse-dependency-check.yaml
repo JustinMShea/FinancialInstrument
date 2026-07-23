@@ -30,9 +30,7 @@ jobs:
       - name: Install test tools and FinancialInstrument dependencies
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          dependencies: all
           extra-packages: |
-            any::pak
             any::rcmdcheck
 
       - name: Install current FinancialInstrument
