@@ -91,7 +91,7 @@ jobs:
       - name: Install blotter
         run: R CMD INSTALL revdeps/blotter
 
-            - name: Verify FinancialInstrument and blotter
+      - name: Verify FinancialInstrument and blotter
         shell: Rscript {0}
         run: |
           expected_fi <- package_version(
