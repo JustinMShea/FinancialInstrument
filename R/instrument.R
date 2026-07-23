@@ -22,6 +22,8 @@
 
 #' class test for object supposedly of type 'instrument'
 #' @param x object to test for type
+#' @return A single logical value indicating whether `x` inherits from class
+#'   `"instrument"`.
 #' @export
 is.instrument <- function( x ) {
   inherits( x, "instrument" )
@@ -41,6 +43,8 @@ is.instrument.name <- function(x) {
 
 #' class test for object supposedly of type 'currency'
 #' @param x object to test for type
+#' @return A single logical value indicating whether `x` inherits from class
+#'   `"currency"`.
 #' @export
 is.currency <- function( x ) {
 #  x<-getInstrument(x, silent=TRUE) # Please use is.currency.name if x is character
@@ -51,6 +55,8 @@ is.currency <- function( x ) {
 #' check each element of a character vector to see if it is either the
 #' primary_id or an identifier of a \code{\link{currency}}
 #' @param x character vector
+#' @return A logical vector indicating whether each element of `x` identifies
+#'   a defined currency instrument. Non-character input returns `FALSE`.
 #' @export
 is.currency.name <- function( x ) {
   if (!is.character(x)) return(FALSE)
@@ -142,7 +148,10 @@ is.currency.name <- function( x ) {
 #'   primary_id be overwritten? Default is TRUE. If FALSE, an error will be
 #'   thrown and the instrument will not be created.
 #' @aliases stock bond future option currency instrument fund
-#'
+#' @return When `assign_i = TRUE`, a character vector containing the
+#'   `primary_id` values of the instruments assigned to the instrument
+#'   registry. When `assign_i = FALSE`, an instrument object is returned for
+#'   scalar input; vectorized constructors return a list of instrument objects.
 #' @seealso
 #' \code{\link{currency}},
 #' \code{\link{exchange_rate}},
@@ -371,10 +380,15 @@ future <- function(primary_id , currency , multiplier , tick_size=NULL,
 #' @param overwrite TRUE/FALSE. If FALSE, only \code{first_traded} and
 #'   \code{expires} will be updated.
 #' @param ... any other passthru parameters
+#' @return For `future_series()` and `option_series()`, a character vector of
+#'   assigned `primary_id` values when `assign_i = TRUE`, or an instrument
+#'   object for scalar input and a list of instrument objects for vectorized
+#'   input when `assign_i = FALSE`. `bond_series()` returns the result of
+#'   creating or updating the bond-series instrument; this is normally the
+#'   assigned identifier for a newly created series.
 #' @aliases option_series future_series bond_series
 #'
 #' @examples
-#' \dontrun{
 #' currency("USD")
 #' future("ES","USD",multiplier=50, tick_size=0.25)
 #' future_series('ES_U1')
@@ -389,7 +403,7 @@ future <- function(primary_id , currency , multiplier , tick_size=NULL,
 #' #multiple series instruments at once.
 #' future_series(c("ES_H12","ES_M12"))
 #' option_series(c("SPY_110917C115","SPY_110917P115"))
-#' }
+#'
 #' @export
 #' @rdname series_instrument
 future_series <- function(primary_id, root_id=NULL, suffix_id=NULL,
@@ -677,7 +691,7 @@ option_series <- function(primary_id , root_id = NULL, suffix_id = NULL,
     }
 }
 
-#' constructor for series of options using yahoo data
+#' Constructor for series of options using yahoo data
 #'
 #' Defines a chain or several chains of options by looking up necessary info
 #' from yahoo.
@@ -706,11 +720,10 @@ option_series <- function(primary_id , root_id = NULL, suffix_id = NULL,
 #' @seealso \code{\link{option_series}}, \code{\link{option}},
 #'   \code{\link{instrument}}, \code{\link[quantmod]{getOptionChain}}
 #' @examples
-#' \dontrun{
 #' option_series.yahoo('SPY') #only nearby calls and puts
 #' option_series.yahoo('DIA', Exp=NULL) #all chains
 #' ls_instruments()
-#' }
+#'
 #' @export
 option_series.yahoo <- function(symbol, Exp, currency="USD", multiplier=100,
                                 first_traded=NULL, tick_size=NULL, overwrite=TRUE) {
@@ -850,7 +863,7 @@ currency <- function(primary_id, identifiers = NULL, assign_i=TRUE, ...){
 }
 
 
-#' constructor for spot exchange rate instruments
+#' Constructor for spot exchange rate instruments
 #'
 #' Currency symbols (like any symbol) may be any combination of alphanumeric
 #' characters, but the FX market has a convention that says that the first
@@ -878,7 +891,11 @@ currency <- function(primary_id, identifiers = NULL, assign_i=TRUE, ...){
 #'   be thrown if there is already an instrument defined with the same
 #'   \code{primary_id}.
 #' @param ... any other passthru parameters
-#' @references http://financial-dictionary.thefreedictionary.com/Base+Currency
+#' @return When `assign_i = TRUE`, a character vector containing the
+#'   `primary_id` values of the exchange-rate instruments assigned to the
+#'   registry. When `assign_i = FALSE`, an exchange-rate instrument object is
+#'   returned for scalar input, or a list of such objects for vectorized input.
+#' @references https://www.investopedia.com/terms/b/basecurrency.asp
 #' @export
 exchange_rate <- function (primary_id = NULL, currency = NULL,
                            counter_currency = NULL, tick_size=0.01,
@@ -1033,7 +1050,6 @@ bond_series <- function(primary_id , suffix_id, ..., first_traded=NULL,
 #' or \code{bond} although it may be updated in the future.
 #' @author Garrett See
 #' @examples
-#' \dontrun{
 #' instrument.auto("CL_H1.U1")
 #' getInstrument("CL_H1.U1") #guaranteed_spread
 #'
@@ -1049,7 +1065,7 @@ bond_series <- function(primary_id , suffix_id, ..., first_traded=NULL,
 #' future("VX","USD",1000,underlying_id=synthetic("SPX","USD")) #make the root
 #' instrument.auto("VX_H11") #and try again
 #' getInstrument("VX_H11") #made a future_series
-#' }
+#'
 #' @export
 instrument.auto <- function(primary_id, currency=NULL, multiplier=1, silent=FALSE,
                             default_type='unknown', root=NULL, assign_i=TRUE,
@@ -1276,17 +1292,20 @@ instrument.auto <- function(primary_id, currency=NULL, multiplier=1, silent=FALS
 #' @param Dates date range to retrieve 'as of', may not currently be implemented
 #' @param silent if TRUE, will not warn on failure, default FALSE
 #' @param type class of object to look for. See Details
+#' @return An object inheriting from the requested instrument class when a
+#'   matching instrument is found. Returns `FALSE` when no matching instrument
+#'   is found.
 #' @examples
-#' \dontrun{
 #' option('..VX', multiplier=100,
-#'   underlying_id=future('.VX',multiplier=1000,
-#'     underlying_id=synthetic('VIX', currency("USD"))))
+#'         underlying_id=future('.VX',multiplier=1000,
+#'         underlying_id=synthetic('VIX', currency("USD")))
+#'         )
 #'
 #' getInstrument("VIX")
 #' getInstrument('VX') #returns the future
 #' getInstrument("VX",type='option')
 #' getInstrument('..VX') #finds the option
-#' }
+#'
 #' @export
 #' @rdname getInstrument
 getInstrument <- function(x, Dates=NULL, silent=FALSE, type='instrument'){
@@ -1513,6 +1532,7 @@ add.defined.by <- function(primary_ids, ...) {
 #' instrument class print method
 #'
 #' @author Joshua Ulrich, Garrett See
+#' @return The instrument object `x`, invisibly.
 #' @keywords internal
 #' @export
 print.instrument <- function(x, ...) {
@@ -1524,6 +1544,8 @@ print.instrument <- function(x, ...) {
 #' instrument class sort method
 #'
 #' @author Garrett See
+#' @return An instrument object of the same class as `x`. Core fields remain
+#'   first and additional named fields are sorted alphabetically.
 #' @keywords internal
 #' @export
 sort.instrument <- function(x, decreasing=FALSE, na.last=NA, ...) {

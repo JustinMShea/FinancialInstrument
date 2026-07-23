@@ -6,6 +6,10 @@
 \usage{
 \method{sort}{instrument}(x, decreasing = FALSE, na.last = NA, ...)
 }
+\value{
+An instrument object of the same class as `x`. Core fields remain
+  first and additional named fields are sorted alphabetically.
+}
 \description{
 instrument class sort method
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/instrument.R
 \name{exchange_rate}
 \alias{exchange_rate}
-\title{constructor for spot exchange rate instruments}
+\title{Constructor for spot exchange rate instruments}
 \usage{
 exchange_rate(
   primary_id = NULL,
@@ -38,6 +38,12 @@ be thrown if there is already an instrument defined with the same
 
 \item{...}{any other passthru parameters}
 }
+\value{
+When `assign_i = TRUE`, a character vector containing the
+  `primary_id` values of the exchange-rate instruments assigned to the
+  registry. When `assign_i = FALSE`, an exchange-rate instrument object is
+  returned for scalar input, or a list of such objects for vectorized input.
+}
 \description{
 Currency symbols (like any symbol) may be any combination of alphanumeric
 characters, but the FX market has a convention that says that the first
@@ -54,5 +60,5 @@ Thanks to Garrett See for helping sort out the inconsistencies in different
 naming and calculating conventions.
 }
 \references{
-http://financial-dictionary.thefreedictionary.com/Base+Currency
+https://www.investopedia.com/terms/b/basecurrency.asp
 }

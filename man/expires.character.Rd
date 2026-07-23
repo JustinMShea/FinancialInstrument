@@ -2,7 +2,7 @@
 % Please edit documentation in R/expires.R
 \name{expires.character}
 \alias{expires.character}
-\title{character expires extraction method}
+\title{Character expires extraction method}
 \usage{
 \method{expires}{character}(x, Date, expired = TRUE, silent = FALSE, ...)
 }
@@ -19,12 +19,18 @@ returned will be the last one before \code{Date}.  If \code{expired} is
 
 \item{silent}{silence warnings?}
 }
+\value{
+A `Date` value representing the selected or inferred expiration
+  date. If `x` identifies a defined instrument, its stored expiration
+  information is used; otherwise, the date is inferred from the identifier.
+  May return `NULL` when a defined instrument has no usable expiration.
+}
 \description{
-if no \code{instrument} can be found by the id of \code{x}, or if the
+If no \code{instrument} can be found by the id of \code{x}, or if the
 \code{instrument} does not have an \code{expires} attribute, an attempt
 will be made to infer the year and month of expiration using \code{parse_id}
-in which case the returned value will be a string of the format
-\dQuote{YYYY-MM}.  Presently, \code{Date} and \code{expired} will be ignored
+in which case the returned value will be a string.
+Presently, \code{Date} and \code{expired} will be ignored
 if \code{x} is not the name of an instrument
 }
 \seealso{

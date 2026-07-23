@@ -38,7 +38,7 @@
 #'   \code{\link{update_instruments.masterDATA}},
 #'   \code{\link[TTR]{stockSymbols}}, \code{\link{stock}}
 #' @references Yahoo! Finance "finance.yahoo.com" and YahooQuote
-#' \url{https://dirk.eddelbuettel.com/code/yahooquote.html}
+#'
 #' @examples
 #' \dontrun{
 #' 	stock('GS',currency('USD'))

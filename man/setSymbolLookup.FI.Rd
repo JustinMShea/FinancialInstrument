@@ -2,7 +2,7 @@
 % Please edit documentation in R/load.instruments.R
 \name{setSymbolLookup.FI}
 \alias{setSymbolLookup.FI}
-\title{set quantmod-style SymbolLookup for instruments}
+\title{Set quantmod-style SymbolLookup for instruments}
 \usage{
 setSymbolLookup.FI(
   base_dir,
@@ -32,18 +32,25 @@ setSymbolLookup.FI(
 
 \item{src}{which \code{\link[quantmod]{getSymbols}} sub-type to use, default \code{\link{getSymbols.FI}} by setting 'FI'}
 }
+\value{
+No meaningful return value. Called for the side effect of updating
+  the `quantmod` symbol lookup table for the requested instruments.
+}
 \description{
-This function exists to tell \code{\link[quantmod]{getSymbols}} where to look for your repository of market data.
+This function exists to tell \code{\link[quantmod]{getSymbols}} where to look
+for your repository of market data.
 }
 \details{
-The \code{base_dir} parameter \emph{must} be set or the function will fail.  
-This will vary by your local environment and operating system.  For mixed-OS environments,
-we recommend doing some OS-detection and setting the network share to your data to a common 
-location by operating system.  For example, all Windows machines may use \dQuote{M:/} 
-and all *nix-style (linux, Mac) machines may use \dQuote{/mnt/mktdata/}. 
+The \code{base_dir} parameter \emph{must} be set or the function will fail.
+This will vary by your local environment and operating system.  For mixed-OS
+environments, we recommend doing some OS-detection and setting the network
+share to your data to a common location by operating system.  For example,
+all Windows machines may use \dQuote{M:/} and all *nix-style (linux, Mac)
+machines may use \dQuote{/mnt/mktdata/}.
 
-The \code{split_method} currently allows either \sQuote{days} or \sQuote{common}, and expects the 
-file or files to be in sub-directories named for the symbol.  In high frequency data, it is standard practice to split
+The \code{split_method} currently allows either \sQuote{days} or
+\sQuote{common}, and expects the file or files to be in sub-directories named
+for the symbol.  In high frequency data, it is standard practice to split
 the data by days, which is why that option is the default.
 }
 \seealso{

@@ -1,4 +1,4 @@
-#' construct a series of symbols based on root symbol and suffix letters
+#' Construct a series of symbols based on root symbol and suffix letters
 #'
 #' The columns needed by this version of the function are \code{primary_id}
 #' and \code{month_cycle}. \code{primary_id} should match the \code{primary_id}
@@ -14,6 +14,9 @@
 #' @param roots data.frame containing at least columns \code{primary_id} and \code{month_cycle}, see Details
 #' @author Brian G. Peterson
 #' @seealso \code{\link{load.instruments}}
+#' @return A character vector containing the constructed series identifiers.
+#'   Each identifier combines a root contract identifier, a contract-month
+#'   code, and a year suffix.
 #' @export
 build_series_symbols <- function(roots, yearlist=c(0,1)) {
         symbols<-''
@@ -27,7 +30,7 @@ build_series_symbols <- function(roots, yearlist=c(0,1)) {
 	return(symbols[-1])
 }
 
-#' build symbols for exchange guaranteed (calendar) spreads
+#' Build symbols for exchange guaranteed (calendar) spreads
 #'
 #' The columns needed by this version of the function are \code{primary_id},
 #'  \code{month_cycle}, and code \code{contracts_ahead}.
@@ -44,16 +47,16 @@ build_series_symbols <- function(roots, yearlist=c(0,1)) {
 #' \code{contracts_ahead} should contain a comma-delimited string describing
 #' the cycle on which the guaranteed calendar spreads are to be consructed,
 #' e.g. '1' for one-month spreads, '1,3' for one and three month spreads,
-#' '1,6,12' for 1, 6, and 12 month spreads, etc.  
-#' For quarterly symbols, the correct \code{contracts_ahead} may be 
-#' something like '1,2,3' for quarterly, bi-annual, and annual spreads.  
+#' '1,6,12' for 1, 6, and 12 month spreads, etc.
+#' For quarterly symbols, the correct \code{contracts_ahead} may be
+#' something like '1,2,3' for quarterly, bi-annual, and annual spreads.
 #'
-#' \code{active_months} is a numeric field indicating how many months including  
-#' the month of the \code{start_date} the contract is available to trade.  
+#' \code{active_months} is a numeric field indicating how many months including
+#' the month of the \code{start_date} the contract is available to trade.
 #' This number will be used as the upper limit for symbol generation.
-#' 
-#' If \code{type} is also specified, it should be a specific instrument type, 
-#' e.g. 'future_series','option_series','guaranteed_spread' or 'calendar_spread' 
+#'
+#' If \code{type} is also specified, it should be a specific instrument type,
+#' e.g. 'future_series','option_series','guaranteed_spread' or 'calendar_spread'
 #'
 #' One of \code{data} or \code{file} must be populated for input data.
 #'
@@ -65,7 +68,11 @@ build_series_symbols <- function(roots, yearlist=c(0,1)) {
 #' @seealso
 #' \code{\link{load.instruments}}
 #' \code{\link{build_series_symbols}}
-# @examples 
+#' @return If `outputfile` is `NULL`, a data frame with columns `symbol` and
+#'  `type`, containing the constructed spread identifiers and their instrument
+#'  types. If `outputfile` is supplied, the data frame is written to that CSV
+#'  file and the function returns `NULL` invisibly.
+# @examples
 # build_spread_symbols(data=data.frame(primary_id='CL',
 #                                      month_sequence="F,G,H,J,K,M,N,Q,U,V,X,Z",
 #                                      contracts_ahead="1,2,3",
@@ -187,7 +194,7 @@ build_spread_symbols <- function(data=NULL,file=NULL,outputfile=NULL,start_date=
     colnames(contractFrame)<-c("symbol","type")
 
     if(!is.null(outputfile)){
-            write.csv(contractFrame,outputfile) 
+            write.csv(contractFrame,outputfile)
     } else {
             return(contractFrame)
     }
@@ -197,7 +204,7 @@ build_spread_symbols <- function(data=NULL,file=NULL,outputfile=NULL,start_date=
 # R (http://r-project.org/) Instrument Class Model
 #
 # Copyright (c) 2009-2012
-# Peter Carl, Dirk Eddelbuettel, Jeffrey Ryan, 
+# Peter Carl, Dirk Eddelbuettel, Jeffrey Ryan,
 # Joshua Ulrich, Brian G. Peterson, and Garrett See
 #
 # This code is distributed under the terms of the GNU Public License (GPL)

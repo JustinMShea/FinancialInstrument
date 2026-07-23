@@ -7,27 +7,30 @@
 \method{all.equal}{instrument}(target, current, char.n = 2, collapse = ";", ...)
 }
 \arguments{
-\item{char.n}{If length of a character vector is \code{char.n} or less it 
+\item{char.n}{If length of a character vector is \code{char.n} or less it
 will be treated as a single element. A negative value for \code{char.n} will
 be treated as if it were positive \code{Inf}.}
 
-\item{collapse}{Only used if a character vector is of length less than 
-\code{char.n}.  Unless \code{collapse} is \code{NULL}, it will be used in a 
-call to \code{\link{paste}}.  If \code{collapse} is \code{NULL}, each element 
+\item{collapse}{Only used if a character vector is of length less than
+\code{char.n}.  Unless \code{collapse} is \code{NULL}, it will be used in a
+call to \code{\link{paste}}.  If \code{collapse} is \code{NULL}, each element
 of the character vector will be compared separately.}
 }
+\value{
+`TRUE` when `target` and `current` are equal. Otherwise, a character
+vector describing differences between the two objects.
+}
 \description{
-This is most useful for seeing the difference between two \code{instrument} 
+This is most useful for seeing the difference between two \code{instrument}
 objects.
 }
 \note{
 ALPHA code. Subject to change
 }
 \examples{
-\dontrun{
 currency("USD")
 stock("SPY", "USD", validExchanges=c("SMART", "ARCA", "BATS", "BEX"))
-stock("DIA", "USD", validExchanges=c("SMART", "ARCA", "ISLAND"), 
+stock("DIA", "USD", validExchanges=c("SMART", "ARCA", "ISLAND"),
      ExtraField="something")
 
 all.equal(getInstrument("SPY"), getInstrument("DIA"))
@@ -35,7 +38,7 @@ all.equal(getInstrument("SPY"), getInstrument("DIA"), char.n=5)
 all.equal(getInstrument("SPY"), getInstrument("DIA"), char.n=5, collapse=NULL)
 
 all.equal(getInstrument("DIA"), getInstrument("USD"))
-}
+
 }
 \seealso{
 \code{\link{getInstrument}}, \code{\link{instrument.table}},
