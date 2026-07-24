@@ -24,14 +24,7 @@
 #' @seealso
 #' \code{\link{buildRatio}}
 #' \code{\link{redenominate}}
-#' @examples
-#'
-#' \donttest{
-#' EURUSD <- getSymbols("EURUSD=x",src='yahoo',auto.assign=FALSE)
-#' USDEUR <- .get_rate("USD","EUR")
-#' head(USDEUR)
-#' head(EURUSD)
-#' }
+#' @keywords internal
 #' @rdname get_rate
 .get_rate <- function(ccy1, ccy2, env=.GlobalEnv) {
     rsym <- NA
