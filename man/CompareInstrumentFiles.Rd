@@ -9,8 +9,8 @@ CompareInstrumentFiles(file1, file2, ...)
 \arguments{
 \item{file1}{A file containing an instrument environment}
 
-\item{file2}{Another file containing an instrument environment.  If not 
-provided, \code{file1} will be compared against the currently loaded 
+\item{file2}{Another file containing an instrument environment.  If not
+provided, \code{file1} will be compared against the currently loaded
 instrument environment.}
 
 \item{...}{Arguments to pass to \code{\link{all.equal.instrument}}}
@@ -24,34 +24,60 @@ A list that contains the names of all instruments that were added,
 Compare the .instrument environments of two files
 }
 \details{
-This will load two instrument files (created by 
-\code{\link{saveInstruments}}) and find the differences between them.  In 
-addition to returning a list of difference that are found, it will produce 
-messages indicating the number of instruments that were added, the number of 
-instruments that were removed, and the number of instruments that are 
+This will load two instrument files (created by
+\code{\link{saveInstruments}}) and find the differences between them.  In
+addition to returning a list of difference that are found, it will produce
+messages indicating the number of instruments that were added, the number of
+instruments that were removed, and the number of instruments that are
 different.
 }
 \examples{
-\dontrun{
-#backup current .instrument environment
-bak <- as.list(FinancialInstrument:::.instrument, all.names=TRUE) 
-old.wd <- getwd()
-tmpdir <- tempdir()
-setwd(tmpdir)
-rm_instruments(keep=FALSE)
-# create some instruments and save
-stock(c("SPY", "DIA", "GLD"), currency("USD"))
-saveInstruments("MyInstruments1")
-# make some changes
-rm_stocks("GLD")
-stock("QQQ", "USD")
-instrument_attr("SPY", "description", "S&P ETF")
-saveInstruments("MyInstruments2")
-CompareInstrumentFiles("MyInstruments1", "MyInstruments2")
-#Clean up
-setwd(old.wd)
-reloadInstruments(bak)
-}
+example_dir <- tempfile("fi-compare-")
+dir.create(example_dir)
+
+backup_name <- "backup.RData"
+file1_name <- "instruments1.RData"
+file2_name <- "instruments2.RData"
+
+backup_path <- file.path(example_dir, backup_name)
+file1_path <- file.path(example_dir, file1_name)
+file2_path <- file.path(example_dir, file2_name)
+
+saveInstruments(backup_name, dir = example_dir)
+
+tryCatch(
+  {
+    stopifnot(file.exists(backup_path))
+
+    rm_instruments(keep.currencies = FALSE)
+    currency("USD")
+    stock(c("SPY", "DIA", "GLD"), currency = "USD")
+    saveInstruments(file1_name, dir = example_dir)
+
+    stopifnot(file.exists(file1_path))
+
+    rm_stocks("GLD")
+    stock("QQQ", currency = "USD")
+    instrument_attr(
+      "SPY",
+      "description",
+      "S&P 500 ETF"
+    )
+    saveInstruments(file2_name, dir = example_dir)
+
+    stopifnot(file.exists(file2_path))
+
+    CompareInstrumentFiles(file1_path, file2_path)
+  },
+  finally = {
+    if (file.exists(backup_path)) {
+      reloadInstruments(backup_name, dir = example_dir)
+    }
+
+    unlink(example_dir, recursive = TRUE)
+  }
+)
+
 }
 \seealso{
 \code{\link{saveInstruments}}, \code{\link{all.equal.instrument}}

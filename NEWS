@@ -1,3 +1,43 @@
+# FinancialInstrument 1.4.1
+
+## CRAN Compliance Fixes
+
+* **Console Output:** Added `verbose = FALSE` parameter to `alltick2sec()` at
+  the end of its signature. The unconditional `cat()` progress call is now
+  suppressible via `verbose = FALSE` (the default) and uses `message()` for
+  optional progress reporting, preserving all existing return values.
+
+* **Return-Value Documentation:** Added `@return` tags to all exported functions
+  that were previously missing `\value` sections, describing return class,
+  structure, and side-effects where applicable.
+
+* **Examples — Temporary Directories:** Replaced `dir.create("tmpdata")` with
+  `tempdir()` / `tempfile()` in the `saveInstruments`, `loadInstruments`,
+  `CompareInstrumentFiles`, `saveSymbols.common`, `saveSymbols.days`, and
+  `getSymbols.FI` examples. Cleanup is handled via `tryCatch(finally = ...)`.
+
+* **Examples — Internal Registry Access:** Removed `FinancialInstrument:::.instrument`
+  from all documentation examples and replaced backup/restore patterns with
+  exported `saveInstruments()` / `reloadInstruments()` calls.
+
+* **Examples — Unmatched Parenthesis:** Fixed the unmatched parenthesis in the
+  `ls_by_currency()` example.
+
+* **Examples — Commented-Out Code:** Removed commented-out executable
+  alternatives from examples.
+
+* **`\dontrun{}` vs `\donttest{}`:** Converted examples that can run in a
+  standard R session from `\dontrun{}` to either runnable or `\donttest{}`
+  blocks; retained `\dontrun{}` only for genuinely unrunnable code (e.g.,
+  examples requiring live network access or specific external files).
+
+* **Namespace:** Confirmed `expires()` is exported. Removed examples for
+  genuinely unexported helpers.
+
+* **`loadInstruments` compatibility:** Updated the header check in
+  `loadInstruments()` to recognise both the legacy `"#auto"` prefix and the
+  new `"# Auto"` prefix written by the refactored `saveInstruments()`.
+
 # FinancialInstrument 1.4.0
 
 ## New Maintainer

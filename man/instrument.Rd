@@ -113,6 +113,12 @@ thrown and the instrument will not be created.}
 \item{underlying_id}{For derivatives, the identifier of the instrument that
 this one is derived from, may be \code{NULL} for cash settled instruments}
 }
+\value{
+When `assign_i = TRUE`, a character vector containing the
+  `primary_id` values of the instruments assigned to the instrument
+  registry. When `assign_i = FALSE`, an instrument object is returned for
+  scalar input; vectorized constructors return a list of instrument objects.
+}
 \description{
 All 'currency' instruments must be defined before instruments of other types
 may be defined.

@@ -1,7 +1,7 @@
 Package: FinancialInstrument
 Type: Package
 Title: Financial Instrument Modeling Infrastructure
-Version: 1.4.0
+Version: 1.4.1
 Authors@R: c(person(given = "Peter",
                       family = "Carl",
                       role = "aut"),

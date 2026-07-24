@@ -10,6 +10,10 @@ is.currency.name(x)
 \arguments{
 \item{x}{character vector}
 }
+\value{
+A logical vector indicating whether each element of `x` identifies
+  a defined currency instrument. Non-character input returns `FALSE`.
+}
 \description{
 check each element of a character vector to see if it is either the
 primary_id or an identifier of a \code{\link{currency}}

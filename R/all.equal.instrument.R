@@ -2,7 +2,7 @@
 # R (http://r-project.org/) Instrument Class Model
 #
 # Copyright (c) 2009-2012
-# Peter Carl, Dirk Eddelbuettel, Jeffrey Ryan, 
+# Peter Carl, Dirk Eddelbuettel, Jeffrey Ryan,
 # Joshua Ulrich, Brian G. Peterson, and Garrett See
 #
 # This library is distributed under the terms of the GNU Public License (GPL)
@@ -15,34 +15,35 @@
 
 #' instrument all.equal method
 #'
-#' This is most useful for seeing the difference between two \code{instrument} 
+#' This is most useful for seeing the difference between two \code{instrument}
 #' objects.
 #'
-#' @param char.n If length of a character vector is \code{char.n} or less it 
+#' @param char.n If length of a character vector is \code{char.n} or less it
 #' will be treated as a single element. A negative value for \code{char.n} will
 #' be treated as if it were positive \code{Inf}.
-#' @param collapse Only used if a character vector is of length less than 
-#' \code{char.n}.  Unless \code{collapse} is \code{NULL}, it will be used in a 
-#' call to \code{\link{paste}}.  If \code{collapse} is \code{NULL}, each element 
+#' @param collapse Only used if a character vector is of length less than
+#' \code{char.n}.  Unless \code{collapse} is \code{NULL}, it will be used in a
+#' call to \code{\link{paste}}.  If \code{collapse} is \code{NULL}, each element
 #' of the character vector will be compared separately.
 #' @author Garrett See
 #' @seealso \code{\link{getInstrument}}, \code{\link{instrument.table}},
 #' \code{\link{buildHierarchy}}
 #' @note ALPHA code. Subject to change
 #' @keywords internal utilities
+#' @return `TRUE` when `target` and `current` are equal. Otherwise, a character
+#' vector describing differences between the two objects.
 #' @examples
-#' \dontrun{
 #' currency("USD")
 #' stock("SPY", "USD", validExchanges=c("SMART", "ARCA", "BATS", "BEX"))
-#' stock("DIA", "USD", validExchanges=c("SMART", "ARCA", "ISLAND"), 
+#' stock("DIA", "USD", validExchanges=c("SMART", "ARCA", "ISLAND"),
 #'      ExtraField="something")
-#' 
+#'
 #' all.equal(getInstrument("SPY"), getInstrument("DIA"))
 #' all.equal(getInstrument("SPY"), getInstrument("DIA"), char.n=5)
 #' all.equal(getInstrument("SPY"), getInstrument("DIA"), char.n=5, collapse=NULL)
-#' 
+#'
 #' all.equal(getInstrument("DIA"), getInstrument("USD"))
-#' }
+#'
 #' @export
 all.equal.instrument <- function (target, current, char.n=2, collapse=";", ...) {
     stopifnot(is.instrument(target))
@@ -50,9 +51,9 @@ all.equal.instrument <- function (target, current, char.n=2, collapse=";", ...) 
     msg <- NULL
     if (mode(target) != mode(current)) {
         msg <- paste("Modes: ", mode(target), ", ", mode(current), sep="")
-    }       
+    }
     if (length(target) != length(current)) {
-        msg <- c(msg, paste("Lengths: ", length(target), ", ", length(current), 
+        msg <- c(msg, paste("Lengths: ", length(target), ", ", length(current),
                             sep=""))
     }
     nt <- names(target)
@@ -61,7 +62,7 @@ all.equal.instrument <- function (target, current, char.n=2, collapse=";", ...) 
         msg <- c(msg, "names for current but not for target")
         #shouldn't happen because instruments are named lists
     } else if (is.null(nc) && !is.null(nt)) {
-        msg <- c(msg, "names for target but not for current")    
+        msg <- c(msg, "names for target but not for current")
     } else {
         if (!all(nt %in% nc)) {
             msg <- c(msg, paste("Names in target that are not in current: <",
@@ -74,9 +75,9 @@ all.equal.instrument <- function (target, current, char.n=2, collapse=";", ...) 
     }
     if (!is.instrument(current)) {
         msg <- c(msg, paste("target is ", class(target)[1L],
-                            ", current is ", class(current)[1L], sep="")) 
+                            ", current is ", class(current)[1L], sep=""))
         return(msg)
-        #TODO: maybe more comparisons can be done depending on what 
+        #TODO: maybe more comparisons can be done depending on what
         #      class(current) is
     }
     # Same class?
@@ -88,7 +89,7 @@ all.equal.instrument <- function (target, current, char.n=2, collapse=";", ...) 
     if (!isTRUE(all.equal(tc, cc))) {
         if (is.null(collapse)) {
             out <- NULL
-            if (!all(tc %in% cc)) { 
+            if (!all(tc %in% cc)) {
                 out <- paste("Classes of target that are not classes of current: <",
                              paste(tc[!tc %in% cc], collapse=", "), ">")
             }
@@ -98,11 +99,11 @@ all.equal.instrument <- function (target, current, char.n=2, collapse=";", ...) 
             }
             msg <- c(msg, out)
         } else {
-            msg <- c(msg, paste("Classes: ", paste(paste(tc, collapse=collapse), 
+            msg <- c(msg, paste("Classes: ", paste(paste(tc, collapse=collapse),
                           paste(cc, collapse=collapse), sep=", "), sep=""))
-        } 
+        }
     }
-    uniqueNames <- function(target, current) {  
+    uniqueNames <- function(target, current) {
         unique(c(names(target), names(current)))
     }
     do.compare <- function(target, current, i) {
@@ -128,7 +129,7 @@ all.equal.instrument <- function (target, current, char.n=2, collapse=";", ...) 
             }
             if (max(length(ti), length(ci)) > char.n && is.character(ti)) {
                 out <- NULL
-                if (!all(ti %in% ci)) 
+                if (!all(ti %in% ci))
                     out <- paste(i, "in target but not in current: <",
                                 paste(ti[!ti %in% ci], collapse=", "), ">")
                 if (!all(ci %in% ti))
@@ -140,7 +141,7 @@ all.equal.instrument <- function (target, current, char.n=2, collapse=";", ...) 
                 out <- if (isTRUE(all.equal(ti, ci, check.attributes=FALSE))) {
                     all.equal(ti, ci)
                 } else {
-                    paste(paste(ti, collapse=collapse), 
+                    paste(paste(ti, collapse=collapse),
                           paste(ci, collapse=collapse), sep=", ")
                 }
                 return(paste(i, ": ", out, sep=""))
@@ -148,10 +149,10 @@ all.equal.instrument <- function (target, current, char.n=2, collapse=";", ...) 
             out <- paste(ti, ci, sep=", ")
             out <- paste(i, ": ", out, sep="")
             return(out)
-        } 
+        }
     }
     ntc <- uniqueNames(target, current)
-    msg <- c(msg, 
+    msg <- c(msg,
              do.call(c, lapply(ntc, function(x) do.compare(target, current, x))))
     if (is.null(msg)) {
         TRUE

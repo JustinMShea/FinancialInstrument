@@ -12,7 +12,7 @@
 #
 ###############################################################################
 
-#' extract the correct expires value from an \code{instrument}
+#' Extract the correct expires value from an \code{instrument}
 #'
 #' Currently, there are methods for \code{instrument}, \code{spread},
 #'  \code{character}, and \code{xts}
@@ -41,7 +41,6 @@
 #' \code{\link{getInstrument}} and \code{\link{buildHierarchy}} to see actual
 #'   values stored in \code{instrument}
 #' @examples
-#' \dontrun{
 #' instr <- instrument("FOO_U1", currency=currency("USD"), multiplier=1,
 #'                     expires=c("2001-09-01", "2011-09-01", "2021-09-01"),
 #'                     assign_i=FALSE)
@@ -60,7 +59,7 @@
 #'            expires=c("2001-09-01", "2011-09-01", "2021-09-01"),
 #'            assign_i=TRUE)
 #' expires("FOO_U1")
-#' }
+#'
 #' @export
 expires <- function(x, ...) {
     UseMethod("expires")
@@ -82,6 +81,8 @@ expires <- function(x, ...) {
 #'   if \code{expires} is a single value, \code{expired} will be ignored.
 #' @param silent silence warnings?
 #' @seealso \code{\link{expires}}
+#' @return A `Date` value representing the selected expiration date, or `NULL`
+#' if the instrument has no usable expiration information.
 #' @author Garrett See
 #' @keywords internal
 #' @export
@@ -124,13 +125,13 @@ expires.instrument <- function(x, Date, expired=TRUE, silent=FALSE, ...) {
 }
 
 
-#' character expires extraction method
+#' Character expires extraction method
 #'
-#' if no \code{instrument} can be found by the id of \code{x}, or if the
+#' If no \code{instrument} can be found by the id of \code{x}, or if the
 #' \code{instrument} does not have an \code{expires} attribute, an attempt
 #' will be made to infer the year and month of expiration using \code{parse_id}
-#' in which case the returned value will be a string of the format
-#' \dQuote{YYYY-MM}.  Presently, \code{Date} and \code{expired} will be ignored
+#' in which case the returned value will be a string.
+#' Presently, \code{Date} and \code{expired} will be ignored
 #' if \code{x} is not the name of an instrument
 #' @param Date Can be a Date or character string.  When \code{expires} is a
 #'   vector, the retuned value will be one of the two values of \code{expires}
@@ -142,6 +143,10 @@ expires.instrument <- function(x, Date, expired=TRUE, silent=FALSE, ...) {
 #'   \code{FALSE} the first one after \code{Date} will be returned.
 #' @param silent silence warnings?
 #' @seealso \code{\link{expires.instrument}}
+#' @return A `Date` value representing the selected or inferred expiration
+#'   date. If `x` identifies a defined instrument, its stored expiration
+#'   information is used; otherwise, the date is inferred from the identifier.
+#'   May return `NULL` when a defined instrument has no usable expiration.
 #' @author Garrett See
 #' @keywords internal
 #' @export
@@ -178,6 +183,10 @@ expires.character <- function(x, Date, expired=TRUE, silent=FALSE, ...) {
 #'   returned will be the last one before \code{Date}.  If \code{expired} is
 #'   \code{FALSE} the first one after \code{Date} will be returned.
 #' @seealso \code{\link{expires.instrument}}
+#' @return A `Date` value representing the spread expiration. The value is
+#'   taken from the spread itself when available; otherwise, it is determined
+#'   from the first-expiring member. May return `NULL` if no expiration can be
+#'   determined.
 #' @author Garrett See
 #' @keywords internal
 #' @export

@@ -20,6 +20,10 @@ if \code{expires} is a single value, \code{expired} will be ignored.}
 
 \item{silent}{silence warnings?}
 }
+\value{
+A `Date` value representing the selected expiration date, or `NULL`
+if the instrument has no usable expiration information.
+}
 \description{
 Returns either the last expiration date before \code{Date}, or the
 first expiration date after \code{Date} (if \code{expired==FALSE}).

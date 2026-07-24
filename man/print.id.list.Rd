@@ -6,6 +6,9 @@
 \usage{
 \method{print}{id.list}(x, ...)
 }
+\value{
+The `id.list` object `x`, invisibly.
+}
 \description{
 id.list class print method
 }

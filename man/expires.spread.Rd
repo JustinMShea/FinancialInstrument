@@ -17,6 +17,12 @@ of \code{expired}).}
 returned will be the last one before \code{Date}.  If \code{expired} is
 \code{FALSE} the first one after \code{Date} will be returned.}
 }
+\value{
+A `Date` value representing the spread expiration. The value is
+  taken from the spread itself when available; otherwise, it is determined
+  from the first-expiring member. May return `NULL` if no expiration can be
+  determined.
+}
 \description{
 \code{x$expires} will be returned if it is not \code{NULL}.  Otherwise, the
 (character representation of the) exiration date of the first-to-expire of

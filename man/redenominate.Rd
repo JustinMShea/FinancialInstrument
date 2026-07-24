@@ -33,15 +33,15 @@ xts object, with as many columns as practicable, that represents the value of an
 Redenominate (change the base of) an instrument
 }
 \details{
-If \code{old_base} is not provided, \code{x} must be the name of an 
+If \code{old_base} is not provided, \code{x} must be the name of an
 instrument (or an object with the name of a defined instrument) so that the
 currency attribute of the instrument can be used.  Otherwise, \code{old_base}
 must be provided.
 
 If you want to convert to JPY something that is denominated in EUR,
 you must have data for the EURJPY (or JPYEUR) exchange rate. If you don't have
-data for EURJPY, but you do have data for EURUSD and USDJPY, 
-you could \code{redenominate} to USD, then \code{redenominate} to EUR, 
+data for EURJPY, but you do have data for EURUSD and USDJPY,
+you could \code{redenominate} to USD, then \code{redenominate} to EUR,
 but this function is not yet smart enough to do that for you.
 
 See the help for buildRatio also.

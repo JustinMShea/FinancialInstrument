@@ -11,6 +11,11 @@ volep(x, units)
 
 \item{units}{volume sum to mark for bars}
 }
+\value{
+An integer vector containing row positions where cumulative volume
+  crosses successive multiples of `units`. These positions may be used as
+  endpoints for constructing volume bars.
+}
 \description{
 generate endpoints for volume bars
 }

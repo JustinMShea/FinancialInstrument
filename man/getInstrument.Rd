@@ -15,6 +15,11 @@ getInstrument(x, Dates = NULL, silent = FALSE, type = "instrument")
 
 \item{type}{class of object to look for. See Details}
 }
+\value{
+An object inheriting from the requested instrument class when a
+  matching instrument is found. Returns `FALSE` when no matching instrument
+  is found.
+}
 \description{
 This function will search the \code{.instrument} environment for objects of
 class \code{type}, using first the \code{primary_id} and then any
@@ -31,14 +36,14 @@ example, the root specs for options (or futures) on the stock with ticker
 until it finds an instrument of the appropriate \code{type}
 }
 \examples{
-\dontrun{
 option('..VX', multiplier=100,
-  underlying_id=future('.VX',multiplier=1000,
-    underlying_id=synthetic('VIX', currency("USD"))))
+        underlying_id=future('.VX',multiplier=1000,
+        underlying_id=synthetic('VIX', currency("USD")))
+        )
 
 getInstrument("VIX")
 getInstrument('VX') #returns the future
 getInstrument("VX",type='option')
 getInstrument('..VX') #finds the option
-}
+
 }
