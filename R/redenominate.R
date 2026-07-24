@@ -2,7 +2,7 @@
 # R (http://r-project.org/) Instrument Class Model
 #
 # Copyright (c) 2009-2012
-# Peter Carl, Dirk Eddelbuettel, Jeffrey Ryan, 
+# Peter Carl, Dirk Eddelbuettel, Jeffrey Ryan,
 # Joshua Ulrich, Brian G. Peterson, and Garrett See
 #
 # This library is distributed under the terms of the GNU Public License (GPL)
@@ -15,18 +15,18 @@
 #' get an exchange rate series
 #'
 #' Try to find exchange rate data in an environment, inverting if necessary.
-#' 
+#'
 #' @param ccy1 chr name of 1st currency
 #' @param ccy2 chr name of 2nd currency
 #' @param env environment in which to look for data.
 #' @return xts object with as many columns as practicable.
 #' @author Garrett See
-#' @seealso 
+#' @seealso
 #' \code{\link{buildRatio}}
 #' \code{\link{redenominate}}
 #' @examples
 #'
-#' \dontrun{
+#' \donttest{
 #' EURUSD <- getSymbols("EURUSD=x",src='yahoo',auto.assign=FALSE)
 #' USDEUR <- .get_rate("USD","EUR")
 #' head(USDEUR)
@@ -53,8 +53,8 @@
         invert = TRUE
     }
     rate <- try(get(rsym,pos=env),silent=TRUE)
-    if (inherits(rate,'try-error')) 
-        stop(paste('Could not find exchange rate for ', ccy1, 
+    if (inherits(rate,'try-error'))
+        stop(paste('Could not find exchange rate for ', ccy1,
                     ' and ', ccy2, ' in ', deparse(substitute(env)), sep=''))
     rsym <- paste(substr(rsym,1,3), substr(rsym,nchar(rsym)-2,nchar(rsym)),sep="")
     if (invert) {
@@ -95,13 +95,13 @@
     xts(x, order.by=as.Date(paste(index(x))))
 }
 
-#' construct price ratios of 2 instruments 
+#' construct price ratios of 2 instruments
 #'
-#' Calculates time series of ratio of 2 instruments using available data. 
+#' Calculates time series of ratio of 2 instruments using available data.
 #' Returned object will be ratios calculated using Bids, Asks, and Mids, or Opens, Closes, and Adjusteds.
 #'
 #' \code{x} should be a vector of 2 instrument names. An attempt will be made to \code{get} the data
-#' for both instruments.  If there are no xts data stored under either of the names, it will try to 
+#' for both instruments.  If there are no xts data stored under either of the names, it will try to
 #' return prebuilt data with a call to \code{\link{.get_rate}}.
 #'
 #' If the data are not of the same frequency, or are not of the same type (OHLC, BBO, etc.)
@@ -109,7 +109,7 @@
 #'
 #' If the data in \code{x[1]} is daily or slower and the data in \code{x[2]} is intraday
 #  then the intraday data in \code{x[2]} will become univariate
-#' (e.g. if you give it daily OHLC and intraday Bid Ask Mid, it will use all of 
+#' (e.g. if you give it daily OHLC and intraday Bid Ask Mid, it will use all of
 #' the OHLC columns of \code{x[1]} and only the the End of Day Mid price of the BAM object.
 #'
 #' If the data in \code{x[1]} is intraday, and the data in \code{x[2]} is daily or slower,
@@ -118,7 +118,7 @@
 #' @param x vector of instrument names. e.g. c("SPY","DIA")
 #' @param env environment where xts data is stored
 #' @param silent silence warnings?
-#' @return 
+#' @return
 #' An xts object with columns of
 #' Bid, Ask, Mid
 #' OR
@@ -149,31 +149,31 @@ buildRatio <- function(x,env=.GlobalEnv, silent=FALSE) {
     if (inherits(x1,'try-error') || inherits(x2,'try-error')) {
         #maybe we can get the ratio directly
         if (!silent) warning(paste('Nothing to build. Returning data found in', deparse(substitute(env)),'if any.'))
-        return(.get_rate(x[1],x[2],env))  
+        return(.get_rate(x[1],x[2],env))
     }
-    #!#---#!# 
+    #!#---#!#
     Bi <- #This, or Bid, should be exported from quantmod
-    function (x) 
+    function (x)
     {
-        if (has.Bid(x)) 
-            return(x[,has.Bid(x,1)])            
+        if (has.Bid(x))
+            return(x[,has.Bid(x,1)])
             #return(x[, grep("Bid", colnames(x), ignore.case = TRUE)])
         stop("subscript out of bounds: no column name containing \"Bid\"")
     }
     As <- #This, or Ask, should be exported from quantmod
-    function (x) 
+    function (x)
     {
-        if (has.Ask(x)) 
-            return(x[,has.Ask(x,1)])    
+        if (has.Ask(x))
+            return(x[,has.Ask(x,1)])
             #return(x[, grep("Ask", colnames(x), ignore.case = TRUE)])
         stop("subscript out of bounds: no column name containing \"Ask\"")
     }
-    
+
     Mid <- #This should be exported from quantmod
-    function (x) 
+    function (x)
     {
-        if (has.Mid(x)) 
-            return(x[,has.Mid(x,1)])            
+        if (has.Mid(x))
+            return(x[,has.Mid(x,1)])
             #return(x[, grep("Mid", colnames(x), ignore.case = TRUE)])
         stop("subscript out of bounds: no column name containing \"Mid\"")
     }
@@ -200,7 +200,7 @@ buildRatio <- function(x,env=.GlobalEnv, silent=FALSE) {
         bid <- Bi(x1)[,1]/As(x2)[,1] * mrat
         ask <- As(x1)[,1]/Bi(x2)[,1] * mrat
         if (has.Mid(x1) && has.Mid(x2)) {
-            mid <- Mid(x1)[,1] / Mid(x2)[,1] * mrat 
+            mid <- Mid(x1)[,1] / Mid(x2)[,1] * mrat
         } else {
             mid <- ((Bi(x1)[,1]+As(x1)[,1])/2) / ((Bi(x2)[,1]+As(x2)[,1])/2) * mrat
         }
@@ -208,7 +208,7 @@ buildRatio <- function(x,env=.GlobalEnv, silent=FALSE) {
         colnames(rat) <- paste(rat.sym,c('Bid','Ask','Mid'),sep='.')
     } else if (NCOL(x1) == 1 && NCOL(x2) == 1) {
         rat <- x1 / x2 * mrat #coredata(x1) / coredata(x2)
-    } else if (periodicity(x1)$frequency >= 86400) { 
+    } else if (periodicity(x1)$frequency >= 86400) {
         #if daily or slower use OHLC and Mid
         if (is.OHLC(x1)) { #If first leg is.OHLC, 2nd leg will be univariate
             div <- if (NCOL(x2) == 1) {
@@ -233,9 +233,9 @@ buildRatio <- function(x,env=.GlobalEnv, silent=FALSE) {
                 for (i in 2:NCOL(x2)) {
                     rat <- cbind(rat, mrat * num/x2[,i])
                 }
-                colnames(rat) <- colnames(x2)                  
-            }  
-        }    
+                colnames(rat) <- colnames(x2)
+            }
+        }
     } else if (periodicity(x1)$frequency < 86400) {
         #if intraday, use BAM and Cl
         if (is.BBO(x1)) { #1st leg is.BBO, 2nd leg will be univariate
@@ -244,10 +244,10 @@ buildRatio <- function(x,env=.GlobalEnv, silent=FALSE) {
                     } else if (has.Cl(x2)) {
                         Cl(x2)[,1]
                     } else if (has.Ad(x2)) {
-                        Ad(x2)[,1]    
+                        Ad(x2)[,1]
                     } else getPrice(x2)[,1]
             rat <- mrat * x1[,1] / div
-            if (NCOL(x1) > 1) {            
+            if (NCOL(x1) > 1) {
                 for (i in 2:NCOL(x1)) {
                     rat <- cbind(rat, mrat * x1[,i]/div)
                 }
@@ -263,7 +263,7 @@ buildRatio <- function(x,env=.GlobalEnv, silent=FALSE) {
             rat <- mrat * num / x2[,1]
             if (NCOL(x2) > 1){
                 for (i in 2:NCOL(x2)) {
-                    rat <- cbind(rat, mrat * num/x2[,i]) 
+                    rat <- cbind(rat, mrat * num/x2[,i])
                 }
             }
         }
@@ -279,29 +279,29 @@ buildRatio <- function(x,env=.GlobalEnv, silent=FALSE) {
 #'
 #' Redenominate (change the base of) an instrument
 #'
-#' If \code{old_base} is not provided, \code{x} must be the name of an 
+#' If \code{old_base} is not provided, \code{x} must be the name of an
 #' instrument (or an object with the name of a defined instrument) so that the
 #' currency attribute of the instrument can be used.  Otherwise, \code{old_base}
 #' must be provided.
 #'
 #' If you want to convert to JPY something that is denominated in EUR,
 #' you must have data for the EURJPY (or JPYEUR) exchange rate. If you don't have
-#' data for EURJPY, but you do have data for EURUSD and USDJPY, 
-#' you could \code{redenominate} to USD, then \code{redenominate} to EUR, 
+#' data for EURJPY, but you do have data for EURUSD and USDJPY,
+#' you could \code{redenominate} to USD, then \code{redenominate} to EUR,
 #' but this function is not yet smart enough to do that for you.
 #'
-#' See the help for buildRatio also. 
+#' See the help for buildRatio also.
 #'
 #' @param x can be either an xts object or the name of an instrument.
 #' @param new_base change the denomination to this; usually a currency.
-#' @param old_base what is the current denomination? 
+#' @param old_base what is the current denomination?
 #' @param EOD_time If data need to be converted to daily, this is the time of day to take the observation.
 #' @param env environment that holds the data
 #' @param silent silence warnings?
 #' @return xts object, with as many columns as practicable, that represents the value of an instrument in a different currency (base).
 #' @author Garrett See
 #' @note this does not yet define any instruments or assign anything.
-#' @seealso 
+#' @seealso
 #' \code{\link{buildRatio}}
 #' @examples
 #'
@@ -325,10 +325,10 @@ redenominate <- function(x, new_base='USD', old_base=NULL, EOD_time='15:00:00', 
         instr <- try(getInstrument(Symbol,silent=TRUE))
         if (!is.instrument(instr)) {
             if (is.null(old_base)) stop(paste("If old_base is not provided, ", Symbol, ' must be defined.', sep=""))
-            mult <- 1        
+            mult <- 1
         } else {
             if (is.null(old_base)) old_base <- instr$currency
-            mult <- as.numeric(instr$multiplier)    
+            mult <- as.numeric(instr$multiplier)
         }
         if (is.character(x)) x <- get(Symbol,pos=env)
     }
@@ -341,12 +341,12 @@ redenominate <- function(x, new_base='USD', old_base=NULL, EOD_time='15:00:00', 
             rate <- buildRatio(c(old_base, new_base), env=env) #maybe it's not FX
         }
     } else rate <- xts(rep(1L, nrow(x)), index(x))
-    
+
     #!#---#!# Define function we'll need
     #This should be exported from quantmod
     Mid <- function (x) {
-        if (has.Mid(x)) 
-            return(x[,has.Mid(x,1)])            
+        if (has.Mid(x))
+            return(x[,has.Mid(x,1)])
             #return(x[, grep("Mid", colnames(x), ignore.case = TRUE)])
         stop("subscript out of bounds: no column name containing \"Mid\"")
     }
@@ -363,7 +363,7 @@ redenominate <- function(x, new_base='USD', old_base=NULL, EOD_time='15:00:00', 
         } else if(is.BBO(rate)) {
             if (periodicity(x)$scale == 'daily') {
                 rate <- .to_daily(rate, EOD_time) #This doesn't make OHLC, the rest do.
-            } else rate <- to.period(Mid(rate)[,1], periodicity(x)$units) 
+            } else rate <- to.period(Mid(rate)[,1], periodicity(x)$units)
         } else rate <- to.period(getPrice(rate)[,1], periodicity(x)$units)
     }
 
@@ -386,7 +386,7 @@ redenominate <- function(x, new_base='USD', old_base=NULL, EOD_time='15:00:00', 
     rsym <- new_base
     assign(rsym,rate,pos=tmpenv)
     assign(Symbol,x,pos=tmpenv)
-    
+
     buildRatio(c(Symbol,rsym),env=tmpenv, silent=TRUE) / mult
 #TODO: colnames
 #TODO: auto.assign
@@ -395,16 +395,16 @@ redenominate <- function(x, new_base='USD', old_base=NULL, EOD_time='15:00:00', 
 
 #dailyConvertFX <- function(xts_obj, rate, prefer=NULL, EOD_time="11:00:00", verbose=TRUE) {
 #    #to convert a EUR denominated asset from EUR to USD, rate=EURUSD
-#    #DAX closes at 11:45 EDT or 10:45 Chicago time    
+#    #DAX closes at 11:45 EDT or 10:45 Chicago time
 #    #FRED data is noon EDT or 11:00:00 Chicago time.
 #    if (periodicity(xts_obj)$scale != "daily") stop('xts_obj must be daily')
-#    rate <- getPrice(rate, prefer=prefer)    
+#    rate <- getPrice(rate, prefer=prefer)
 #    tmpdt <- as.Date(index(rate[1:2,]))
 #    if (tmpdt[1] == tmpdt[2]) { #intraday data
 #        if (verbose) warning('converting rate to daily')
-#        rate <- .to_daily(rate, EOD_time)        
+#        rate <- .to_daily(rate, EOD_time)
 #        rate <- rate[paste(start(xts_obj), end(xts_obj), sep="/")]
-#    }   
+#    }
 #    df <- cbind(rate, xts_obj, all=TRUE)
 #    df <- df[paste(max(start(rate),start(xts_obj)), '::', sep="")]
 #    if (verbose && (NROW(df) < NROW(xts_obj))) warning('Data removed where rate was missing')
