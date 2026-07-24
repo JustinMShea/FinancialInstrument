@@ -94,7 +94,7 @@
 #' rm_instruments() #remove all but currencies
 #' rm_currencies()
 #'
-#' }
+#'
 #' @export
 #' @rdname ls_instruments
 ls_instruments <- function(pattern=NULL, match=TRUE, verbose=TRUE) {
