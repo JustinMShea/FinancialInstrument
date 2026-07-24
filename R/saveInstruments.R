@@ -45,6 +45,7 @@
 #' @seealso save, load load.instrument define_stocks, define_futures,
 #' define_options (option_series.yahoo)
 #' @examples
+#'
 #' backup_file <- tempfile(fileext = ".RData")
 #' output_dir <- tempfile("fi-save-test-")
 #' dir.create(output_dir)
@@ -52,31 +53,32 @@
 #' saveInstruments(backup_file)
 #'
 #' tryCatch(
-#' {
-#' rm_instruments(keep.currencies = FALSE)
+#'   {
+#'     rm_instruments(keep.currencies = FALSE)
 #'
-#' currency("USD")
-#' stock("SPY", currency = "USD")
+#'     currency("USD")
+#'     stock("SPY", currency = "USD")
 #'
-#' saveInstruments(
-#'  "test-instruments.R",
-#'    dir = output_dir
-#'    )
+#'     saveInstruments(
+#'       "test-instruments.R",
+#'       dir = output_dir
+#'     )
 #'
-#'    rm_instruments(keep.currencies = FALSE)
-#'  source(
-#'  file.path(output_dir, "test-instruments.R")
-#'  )
+#'     rm_instruments(keep.currencies = FALSE)
 #'
-#'  stopifnot(is.instrument.name("SPY"))
-#'  stopifnot(getInstrument("SPY")$currency == "USD")
-#'  },
-#'  finally = {
-#'  reloadInstruments(backup_file)
-#'  unlink(backup_file)
-#'  unlink(output_dir, recursive = TRUE)
-#'  }
-#'  )
+#'     source(
+#'       file.path(output_dir, "test-instruments.R")
+#'     )
+#'
+#'     stopifnot(is.instrument.name("SPY"))
+#'     stopifnot(getInstrument("SPY")$currency == "USD")
+#'   },
+#'   finally = {
+#'     reloadInstruments(backup_file)
+#'     unlink(backup_file)
+#'     unlink(output_dir, recursive = TRUE)
+#'   }
+#' )
 #'
 #' @export
 #' @rdname saveInstruments

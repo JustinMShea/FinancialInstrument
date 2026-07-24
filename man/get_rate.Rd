@@ -21,7 +21,7 @@ Try to find exchange rate data in an environment, inverting if necessary.
 }
 \examples{
 
-\dontrun{
+\donttest{
 EURUSD <- getSymbols("EURUSD=x",src='yahoo',auto.assign=FALSE)
 USDEUR <- .get_rate("USD","EUR")
 head(USDEUR)

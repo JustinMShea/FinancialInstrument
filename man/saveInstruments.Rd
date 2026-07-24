@@ -46,6 +46,7 @@ will create a text file of \R code that can be \code{\link{source}}d to
 load instruments back into the .instrument environment.
 }
 \examples{
+
 backup_file <- tempfile(fileext = ".RData")
 output_dir <- tempfile("fi-save-test-")
 dir.create(output_dir)
@@ -53,31 +54,32 @@ dir.create(output_dir)
 saveInstruments(backup_file)
 
 tryCatch(
-{
-rm_instruments(keep.currencies = FALSE)
+  {
+    rm_instruments(keep.currencies = FALSE)
 
-currency("USD")
-stock("SPY", currency = "USD")
+    currency("USD")
+    stock("SPY", currency = "USD")
 
-saveInstruments(
- "test-instruments.R",
-   dir = output_dir
-   )
+    saveInstruments(
+      "test-instruments.R",
+      dir = output_dir
+    )
 
-   rm_instruments(keep.currencies = FALSE)
- source(
- file.path(output_dir, "test-instruments.R")
- )
+    rm_instruments(keep.currencies = FALSE)
 
- stopifnot(is.instrument.name("SPY"))
- stopifnot(getInstrument("SPY")$currency == "USD")
- },
- finally = {
- reloadInstruments(backup_file)
- unlink(backup_file)
- unlink(output_dir, recursive = TRUE)
- }
- )
+    source(
+      file.path(output_dir, "test-instruments.R")
+    )
+
+    stopifnot(is.instrument.name("SPY"))
+    stopifnot(getInstrument("SPY")$currency == "USD")
+  },
+  finally = {
+    reloadInstruments(backup_file)
+    unlink(backup_file)
+    unlink(output_dir, recursive = TRUE)
+  }
+)
 
 }
 \seealso{
