@@ -117,7 +117,7 @@
   parsed <- try(parse_suffix(suffix_id, silent = TRUE), silent = TRUE)
 
   if (inherits(parsed, "try-error") || is.null(parsed$format) ||
-      length(parsed$format) == 0L || is.na(parsed$format)) {
+      length(parsed$format) == 0L || any(is.na(parsed$format))) {
     stop(
       "'suffix_id' is not a recognized futures suffix: ", sQuote(suffix_id),
       call. = FALSE
@@ -146,9 +146,9 @@
 
 .validate_future_series_dates <- function(suffix_id, first_traded = NULL,
                                           expires = NULL) {
-  suffix <- .parse_future_suffix(suffix_id)
   first_info <- .parse_instrument_date(first_traded, "first_traded")
   expiry_info <- .parse_instrument_date(expires, "expires")
+  suffix <- .parse_future_suffix(suffix_id)
 
   if (suffix$dated_outright && !is.null(expiry_info)) {
     mismatch <- expiry_info$year != suffix$year |
@@ -170,16 +170,23 @@
     }
   }
 
-  if (!is.null(first_info) && !is.null(expiry_info) &&
-      nrow(first_info) == 1L && nrow(expiry_info) == 1L) {
-    first_ym <- first_info$year * 12L + first_info$month
-    expiry_ym <- expiry_info$year * 12L + expiry_info$month
+  if (!is.null(first_info) && !is.null(expiry_info)) {
+    n <- max(nrow(first_info), nrow(expiry_info))
+    first_index <- rep(seq_len(nrow(first_info)), length.out = n)
+    expiry_index <- rep(seq_len(nrow(expiry_info)), length.out = n)
+    first_values <- first_info[first_index, , drop = FALSE]
+    expiry_values <- expiry_info[expiry_index, , drop = FALSE]
 
-    if (first_ym > expiry_ym ||
-        (first_ym == expiry_ym &&
-         first_info$precision == "day" &&
-         expiry_info$precision == "day" &&
-         first_info$date > expiry_info$date)) {
+    first_ym <- first_values$year * 12L + first_values$month
+    expiry_ym <- expiry_values$year * 12L + expiry_values$month
+
+    invalid_order <- first_ym > expiry_ym |
+      (first_ym == expiry_ym &
+       first_values$precision == "day" &
+       expiry_values$precision == "day" &
+       first_values$date > expiry_values$date)
+
+    if (any(invalid_order)) {
       stop("'first_traded' must not be after 'expires'", call. = FALSE)
     }
   }

@@ -86,6 +86,15 @@ expect_error(
 expect_error(
   future_series(
     root_id = "ES",
+    expires = "2027-13",
+    assign_i = FALSE
+  ),
+  "invalid date"
+)
+
+expect_error(
+  future_series(
+    root_id = "ES",
     suffix_id = "BAD",
     assign_i = FALSE
   ),
@@ -123,6 +132,27 @@ expect_error(
     assign_i = FALSE
   ),
   "must not be after"
+)
+
+expect_error(
+  future_series(
+    root_id = "ES",
+    suffix_id = "H27",
+    first_traded = c("2027-03-15", "2027-04-01"),
+    expires = c("2027-03-19", "2027-03-31"),
+    assign_i = FALSE
+  ),
+  "must not be after"
+)
+
+expect_silent(
+  future_series(
+    root_id = "ES",
+    suffix_id = "H27",
+    first_traded = as.Date("2027-03-15"),
+    expires = as.POSIXct("2027-03-19", tz = "UTC"),
+    assign_i = FALSE
+  )
 )
 
 # Multiple complete identifiers retain the existing vectorized behavior.

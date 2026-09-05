@@ -404,12 +404,19 @@ future_series <- function(primary_id, root_id=NULL, suffix_id=NULL,
                      'both a root_id and a suffix_id'))
       } else {
           if (is.null(suffix_id)) {
-              sdate <- gsub("-","",expires)
-              if (is.null(expires) || nchar(sdate) < 6) {
+              if (is.null(expires)) {
                   stop("must provide either 'expires' or 'suffix_id'")
               }
-              suffix_id <- paste(M2C()[as.numeric(substr(sdate,5,6))],
-                                                  substr(sdate,3,4),sep="")
+              expiry_info <- .parse_instrument_date(expires, "expires")
+              if (nrow(expiry_info) != 1L) {
+                  stop("'expires' must contain one value when 'suffix_id' is omitted",
+                       call. = FALSE)
+              }
+              suffix_id <- paste(
+                  M2C()[expiry_info$month],
+                  substr(expiry_info$year, 3, 4),
+                  sep = ""
+              )
           }
           primary_id <- paste(gsub("\\.","",root_id), suffix_id, sep="_")
       }
