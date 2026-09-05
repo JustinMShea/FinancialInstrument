@@ -77,7 +77,6 @@ This is not intended to be used to create instruments of type
 or \code{bond} although it may be updated in the future.
 }
 \examples{
-\dontrun{
 instrument.auto("CL_H1.U1")
 getInstrument("CL_H1.U1") #guaranteed_spread
 
@@ -93,7 +92,7 @@ getInstrument("VX_H11") #couldn't find future, didnt make future_series
 future("VX","USD",1000,underlying_id=synthetic("SPX","USD")) #make the root
 instrument.auto("VX_H11") #and try again
 getInstrument("VX_H11") #made a future_series
-}
+
 }
 \author{
 Garrett See

@@ -91,11 +91,11 @@ NULL
 #' where and how your market data are stored so that
 #' \code{\link[quantmod]{getSymbols}} will work for you.
 #'
-#' FinancialInstrument's functions build and manipulate objects that are stored
-#' in an environment named ".instrument" at the top level of the package
-#' (i.e. "FinancialInstrument:::.instrument") rather than the global
-#' environment, \code{.GlobalEnv}.  Objects may be listed using
-#' \code{ls_instruments()} (or many other ls_* functions).
+#' FinancialInstrument stores instrument definitions in an internal
+#' package-level environment named `.instrument`, rather than in
+#' `.GlobalEnv`. Users should access instrument definitions through exported
+#' functions such as `getInstrument()`, `ls_instruments()`,
+#' `saveInstruments()`, and `loadInstruments()`.
 #'
 #' We store instruments in their own environment for two reasons.  First, it
 #' keeps the user's workspace less cluttered and lowers the probability of

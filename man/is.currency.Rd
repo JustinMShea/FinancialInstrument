@@ -9,6 +9,10 @@ is.currency(x)
 \arguments{
 \item{x}{object to test for type}
 }
+\value{
+A single logical value indicating whether `x` inherits from class
+  `"currency"`.
+}
 \description{
 class test for object supposedly of type 'currency'
 }

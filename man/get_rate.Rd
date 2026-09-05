@@ -19,15 +19,6 @@ xts object with as many columns as practicable.
 \description{
 Try to find exchange rate data in an environment, inverting if necessary.
 }
-\examples{
-
-\dontrun{
-EURUSD <- getSymbols("EURUSD=x",src='yahoo',auto.assign=FALSE)
-USDEUR <- .get_rate("USD","EUR")
-head(USDEUR)
-head(EURUSD)
-}
-}
 \seealso{
 \code{\link{buildRatio}}
 \code{\link{redenominate}}
@@ -35,3 +26,4 @@ head(EURUSD)
 \author{
 Garrett See
 }
+\keyword{internal}

@@ -22,25 +22,52 @@ saveSymbols.common(Symbols, base_dir = "", extension = "rda", env = .GlobalEnv)
 called for side-effect.
 }
 \description{
-Save data to disk the way that \code{getSymbols.FI} 
+Save data to disk the way that \code{getSymbols.FI}
 expects it to be saved.
 }
 \details{
-If they do not already exist, subdirectories will be created for each of the 
-\code{Symbols}.  \code{saveSymbols.common} will save a single \sQuote{rda} 
+If they do not already exist, subdirectories will be created for each of the
+\code{Symbols}.  \code{saveSymbols.common} will save a single \sQuote{rda}
 file for each of the \code{Symbols} in that symbol's subdirectory.
-\code{saveSymbols.days} will split the data up into days and save a separate 
+\code{saveSymbols.days} will split the data up into days and save a separate
 \sQuote{rda} file for each day in that symbol's subdirectory.
 }
 \examples{
-\dontrun{
-getSymbols("SPY", src='yahoo')
-dir.create("tmpdata")
-saveSymbols.common("SPY", base_dir="tmpdata")
-rm("SPY")
-getSymbols("SPY", src='FI', dir="tmpdata", split_method='common')
-unlink("tmpdata/SPY", recursive=TRUE)
-}
+example_dir <- tempfile("fi-symbol-data-")
+dir.create(example_dir)
+
+example_env <- new.env()
+
+example_env$SPY <- xts::xts(
+  matrix(
+    1:8,
+    ncol = 2L,
+    dimnames = list(
+      NULL,
+      c("Close", "Volume")
+    )
+  ),
+  order.by = as.Date("2020-01-01") + 0:3
+)
+
+tryCatch(
+  {
+    saveSymbols.common(
+      "SPY",
+      base_dir = example_dir,
+      env = example_env
+    )
+
+    list.files(
+      example_dir,
+      recursive = TRUE
+    )
+  },
+  finally = {
+    unlink(example_dir, recursive = TRUE)
+  }
+)
+
 }
 \seealso{
 \code{\link{getSymbols.FI}}

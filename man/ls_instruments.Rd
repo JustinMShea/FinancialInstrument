@@ -156,8 +156,7 @@ denominated in USD.
 }
 \examples{
 
-\dontrun{
-#rm_instruments(keep.currencies=FALSE) #remove everything from .instrument
+rm_instruments(keep.currencies=FALSE) #remove everything from .instrument
 
 # First, create some instruments
 currency(c("USD", "EUR", "JPY"))
@@ -184,13 +183,12 @@ ls_futures()
 ls_derivatives()
 ls_puts()
 ls_non_derivatives()
-#ls_by_expiry('20110618',ls_puts()) #put options that expire on Jun 18th, 2011
-#ls_puts(ls_by_expiry('20110618')) #same thing
+ls_by_expiry('20110618',ls_puts()) #put options that expire on Jun 18th, 2011
+ls_puts(ls_by_expiry('20110618'))
 
 rm_options('SPY_110618C130')
 rm_futures()
 ls_instruments()
-#rm_instruments('EUR') #Incorrect
 rm_instruments('EUR', keep.currencies=FALSE) #remove the currency
 rm_currencies('JPY') #or remove currency like this
 ls_currencies()
@@ -199,11 +197,7 @@ ls_instruments()
 rm_instruments() #remove all but currencies
 rm_currencies()
 
-option_series.yahoo('DIA')
-ls_instruments_by('underlying_id','DIA') #underlying_id must exactly match 'DIA'
-ls_derivatives('DIA',match=FALSE) #primary_ids that contain 'DIA'
-rm_instruments()
-}
+
 }
 \seealso{
 ls_instruments_by, ls_by_currency, ls_by_expiry, ls, rm,

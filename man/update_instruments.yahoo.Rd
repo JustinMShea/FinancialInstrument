@@ -49,7 +49,6 @@ define the stocks if they do not already exist.
 }
 \references{
 Yahoo! Finance "finance.yahoo.com" and YahooQuote
-\url{https://dirk.eddelbuettel.com/code/yahooquote.html}
 }
 \seealso{
 \code{\link{update_instruments.instrument}},

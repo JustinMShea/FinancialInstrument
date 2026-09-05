@@ -2,7 +2,7 @@
 % Please edit documentation in R/instrument.R
 \name{option_series.yahoo}
 \alias{option_series.yahoo}
-\title{constructor for series of options using yahoo data}
+\title{Constructor for series of options using yahoo data}
 \usage{
 option_series.yahoo(
   symbol,
@@ -52,7 +52,7 @@ Has only been tested with stock options.
 The options' currency should be the same as the underlying's.
 }
 \examples{
-\dontrun{
+\donttest{
 option_series.yahoo('SPY') #only nearby calls and puts
 option_series.yahoo('DIA', Exp=NULL) #all chains
 ls_instruments()

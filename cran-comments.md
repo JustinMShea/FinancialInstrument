@@ -1,29 +1,47 @@
 ## Test environments
 
-* Local Ubuntu Linux (22.04 and 24.04), R 4.6.1 (2026-06-24)
-* win-builder (R release and R-devel)
+* Local Ubuntu 22.04, R 4.6.1
+* Local Ubuntu 24.04, R 4.6.1
+* GitHub Actions, Ubuntu, R release
+* win-builder, R release
+* win-builder, R-devel
 
 ## R CMD check results
 
-0 errors | 0 warnings | 0 notes
+0 errors | 0 warnings | 1 note
 
-## Submission Notes
+The remaining NOTE reports that FinancialInstrument was previously archived on 
+CRAN. This is expected for this resubmission.
 
-This is a resubmission of the previously archived package **FinancialInstrument**. The issues that led to archival have been addressed.
+## Resubmission
 
-Ross Bennett, the previous CRAN maintainer, has agreed to the maintainer transition and has sent confirmation directly to CRAN.
+This is a resubmission of FinancialInstrument 1.4.1 addressing the reviewer 
+feedback received after the 1.4.0 submission.
 
-The following changes were made for this release:
+The following changes were made:
 
-* Justin M. Shea is now the package maintainer, and the `DESCRIPTION` file has been updated accordingly.
-* Updated legacy roxygen2 documentation blocks across multiple source files (`instrument.R`, `ls_by_currency.R`, `ls_instruments.R`, and `FinancialInstrument-package.R`) to comply with current roxygen2 parsing requirements, including `@aliases` and `@importFrom` directives.
-* Corrected S3 generic/method registration for `expires.spread`.
-* Added the appropriate package-qualified Rd cross-reference for `quantmod::setSymbolLookup`.
-* Added `Encoding: UTF-8` to the package metadata.
-* Removed hyperlinks to Yahoo Finance from the documentation because Yahoo returns HTTP 429 responses during automated URL checks.
+* Added missing return-value documentation to exported functions and regenerated
+the package manuals.
+* Corrected broken and incomplete examples.
+* Removed commented-out executable alternatives from examples.
+* Replaced unnecessary `\dontrun{}` sections with executable examples or 
+  `\donttest{}` where an external service is required.
+* Updated examples that write files to use temporary directories and restore 
+  instrument-registry state.
+* Removed direct `FinancialInstrument:::.instrument` access from documentation 
+  examples.
+* Confirmed that `expires()` is exported.
+* Restored and tested the previously exported `rm_by_currency()` function.
+* Made progress output from `alltick2sec()` suppressible through a new trailing 
+  `verbose = FALSE` argument.
+* Removed default writes to fixed locations in the user’s home directory while 
+  preserving calls that provide explicit paths.
+* Added regression tests for instrument saving, loading, registry restoration, 
+and currency-based removal.
 
-Additional improvements made during the update include:
+FinancialInstrument provides general infrastructure for financial-instrument 
+metadata and does not implement a methodology associated with a specific 
+publication. Therefore, no DOI, ISBN, or methodological reference applies.
 
-* Migrated the testing framework from `testthat` to `tinytest`.
-* Expanded test coverage for frequency-mixed `xts` time-series alignment.
-* Added a `README.md` and GitHub Actions continuous integration workflows for automated package checks.
+Ross Bennett, the previous maintainer, agreed to the maintainer transition and 
+provided confirmation directly to CRAN.

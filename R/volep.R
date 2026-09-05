@@ -1,12 +1,13 @@
-
-
 #' generate endpoints for volume bars
 #' @param x time series containing 'Volume' column
 #' @param units volume sum to mark for bars
+#' @return An integer vector containing row positions where cumulative volume
+#'   crosses successive multiples of `units`. These positions may be used as
+#'   endpoints for constructing volume bars.
 #' @author Joshua Ulrich
 #' @export
 volep <- function (x, units){
-    incepSum <- runSum(Vo(x),1,TRUE)                               
+    incepSum <- runSum(Vo(x),1,TRUE)
     bins <- incepSum %/% units
     bins[1]<-0
     ep<-which(diff(bins)!=0)
