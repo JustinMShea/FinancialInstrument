@@ -171,6 +171,7 @@
   }
 
   if (!is.null(first_info) && !is.null(expiry_info)) {
+    # Pair vector values using R's usual recycling semantics.
     n <- max(nrow(first_info), nrow(expiry_info))
     first_index <- rep(seq_len(nrow(first_info)), length.out = n)
     expiry_index <- rep(seq_len(nrow(expiry_info)), length.out = n)

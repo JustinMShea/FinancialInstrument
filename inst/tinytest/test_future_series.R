@@ -149,6 +149,16 @@ expect_silent(
   future_series(
     root_id = "ES",
     suffix_id = "H27",
+    first_traded = "2027-03-15",
+    expires = c("2027-03-19", "2027-03-31"),
+    assign_i = FALSE
+  )
+)
+
+expect_silent(
+  future_series(
+    root_id = "ES",
+    suffix_id = "H27",
     first_traded = as.Date("2027-03-15"),
     expires = as.POSIXct("2027-03-19", tz = "UTC"),
     assign_i = FALSE
