@@ -1,6 +1,8 @@
 # FinancialInstrument
-
 [![R-CMD-check](https://github.com/JustinMShea/FinancialInstrument/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/JustinMShea/FinancialInstrument/actions/workflows/R-CMD-check.yaml)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/FinancialInstrument)](https://cran.r-project.org/package=FinancialInstrument) 
+[![status](https://tinyverse.netlify.app/badge/FinancialInstrument)](https://CRAN.R-project.org/package=FinancialInstrument) 
+
 
 FinancialInstrument provides infrastructure for defining, storing, and managing financial instrument metadata in R. 
 Rather than focusing on market prices or returns, the package models the instruments themselves; their identities, specifications, and relationships. 
