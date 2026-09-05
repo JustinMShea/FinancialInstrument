@@ -570,6 +570,11 @@ option_series <- function(primary_id , root_id = NULL, suffix_id = NULL,
                     callput,
                     allow_default = FALSE
                 )
+                if (is.null(normalized_callput)) {
+                    stop(paste("must provide 'callput' or a 'suffix_id'",
+                               "from which 'callput' can be inferred."),
+                         call. = FALSE)
+                }
                 strike <- .validate_option_strike(strike)
                 if (is.null(strike)) {
                     stop(paste("must provide 'strike' or a 'suffix_id'",
@@ -628,6 +633,9 @@ option_series <- function(primary_id , root_id = NULL, suffix_id = NULL,
         strike = strike
     )
     expires <- validated$expires
+    if (!is.null(validated$first_traded)) {
+        first_traded <- validated$first_traded
+    }
     callput <- validated$callput
     strike <- validated$strike
 

@@ -233,5 +233,63 @@ expect_error(
   "must be a single date"
 )
 
+# Vectorized primary_id calls are supported.
+vec_res <- option_series(
+    c("SPY_270115C600", "SPY_270115P600"),
+    root_id = ".SPY",
+    assign_i = FALSE
+)
+expect_equal(length(vec_res), 2L)
+expect_identical(vec_res[[1]]$callput, "call")
+expect_identical(vec_res[[2]]$callput, "put")
+
+expect_error(
+    option_series(
+        c("SPY_270115C600", "SPY_270115P600"),
+        expires = "2027-01-15",
+        assign_i = FALSE
+    ),
+    "must be NULL"
+)
+
+# Omitted callput when constructing from fields gives a clear error.
+expect_error(
+    option_series(
+        root_id = ".SPY",
+        expires = "2027-01-15",
+        strike = 600,
+        assign_i = FALSE
+    ),
+    "must provide 'callput'"
+)
+
+# Explicit callput = NULL uses the inferred callput.
+null_cp <- option_series(
+    "SPY_270115C600",
+    root_id = ".SPY",
+    callput = NULL,
+    assign_i = FALSE
+)
+expect_identical(null_cp$callput, "call")
+
+# first_traded is normalized to a formatted date string.
+ft_contract <- option_series(
+    "SPY_270319C600",
+    root_id = ".SPY",
+    first_traded = as.POSIXct(
+        "2027-03-01 09:30:00",
+        tz = "America/New_York"
+    ),
+    assign_i = FALSE
+)
+expect_identical(ft_contract$first_traded, "2027-03-01")
+
+# OSI-style symbols with 8-digit fixed-width fractional strikes are parsed.
+osi_dec <- option_series(
+    "SPY_20270115C00122500",
+    root_id = ".SPY",
+    assign_i = FALSE
+)
+expect_equal(osi_dec$strike, 122.5)
 
 rm_instruments(keep.currencies = FALSE)

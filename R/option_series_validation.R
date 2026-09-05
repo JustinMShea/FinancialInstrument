@@ -19,16 +19,7 @@
     }
 
     if (inherits(value, "POSIXt")) {
-      tz <- attr(value, "tzone")
-
-      if (is.null(tz) || length(tz) == 0L ||
-          is.na(tz[[1L]]) || !nzchar(tz[[1L]])) {
-        tz <- "UTC"
-      } else {
-        tz <- tz[[1L]]
-      }
-
-      return(as.Date(value, tz = tz))
+      return(as.Date(format(value, "%Y-%m-%d")))
     }
 
     value <- as.character(value)
@@ -53,6 +44,7 @@
 }
 
 .normalize_option_callput <- function(callput, allow_default = TRUE) {
+    if (is.null(callput)) return(NULL)
     if (allow_default && length(callput) == 2L &&
             identical(tolower(callput), c("call", "put"))) {
         return(NULL)
@@ -199,6 +191,7 @@
 
     list(
         expires = format(expiration),
+        first_traded = if (!is.null(traded)) format(traded) else NULL,
         callput = resolved_callput,
         strike = resolved_strike
     )
