@@ -27,23 +27,17 @@ This approach separates instrument metadata from market data, allowing a single 
 FinancialInstrument therefore acts as an instrument registry and metadata model that can support many different quantitative finance workflows.
 
 
-## Status
-
-The package is being prepared for resubmission to CRAN. Until it is available from CRAN again, install the development version from GitHub.
-
 ## Installation
 
-Install the package from GitHub with `remotes`:
+Install the package from CRAN or GitHub with `remotes`:
+
+```r
+install.packages("FinancialInstrument")
+```
 
 ```r
 install.packages("remotes")
 remotes::install_github("JustinMShea/FinancialInstrument")
-```
-
-After the package returns to CRAN, the standard installation command will be:
-
-```r
-install.packages("FinancialInstrument")
 ```
 
 ## Quick start
