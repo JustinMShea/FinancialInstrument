@@ -593,7 +593,7 @@ option_series <- function(primary_id , root_id = NULL, suffix_id = NULL,
                 }
                 normalized_callput <- .normalize_option_callput(
                     callput,
-                    allow_default = FALSE
+                    allow_default = TRUE
                 )
                 if (is.null(normalized_callput)) {
                     stop(paste("must provide 'callput' or a 'suffix_id'",
